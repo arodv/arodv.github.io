@@ -1,0 +1,2250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>에니어그램 성격유형검사</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#20242b;
+    --paper:#f6f2ea;
+    --paper-2:#efe9dc;
+    --navy:#232946;
+    --navy-2:#3a4270;
+    --ochre:#b9812f;
+    --line:#d9d0bd;
+    --muted:#7a7266;
+    --white:#fffdf8;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Noto Sans KR',sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;}
+  h1,h2,h3,.serif{font-family:'Noto Serif KR',serif;}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 90px;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 20px;border-bottom:1px solid var(--line);
+    max-width:760px;margin:0 auto;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Noto Serif KR',serif;font-weight:600;font-size:18px;color:var(--navy);}
+  .brand svg{flex-shrink:0;}
+  .navlink{font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .navlink:hover{color:var(--navy);}
+  .hero{padding:34px 0 8px;}
+  .hero .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--ochre);font-weight:700;text-transform:uppercase;}
+  .hero h1{font-size:30px;margin:10px 0 6px;color:var(--navy);}
+  .hero p{color:var(--muted);font-size:15px;max-width:520px;}
+  .card{
+    background:var(--white);border:1px solid var(--line);border-radius:8px;
+    padding:28px;margin-bottom:20px;
+  }
+  .card h3{margin:0 0 12px;font-size:18px;color:var(--navy);font-weight:700;letter-spacing:-.02em;}
+  .card p{margin:0 0 16px;color:var(--ink);font-size:14.5px;line-height:1.8;}
+  .card p:last-child{margin-bottom:0;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:600px){.row2{grid-template-columns:1fr;}}
+  button{
+    font-family:'Noto Sans KR',sans-serif;font-size:14.5px;font-weight:500;
+    border-radius:3px;border:1px solid var(--navy);padding:10px 18px;
+    cursor:pointer;transition:.15s;
+  }
+  .btn-primary{background:var(--navy);color:var(--white);}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-ghost{background:transparent;color:var(--navy);}
+  .btn-ghost:hover{background:var(--paper-2);}
+  .btn-block{width:100%;}
+  input[type=text],input[type=number],select{
+    width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:3px;
+    font-family:'Noto Sans KR',sans-serif;font-size:14.5px;background:var(--white);
+  }
+  label.field-label{font-size:12.5px;color:var(--muted);display:block;margin-bottom:5px;}
+  .field{margin-bottom:16px;}
+
+  /* 생년월일 스크롤 피커 */
+  .picker{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px;}
+  .picker-col{position:relative;height:220px;overflow:hidden;border:1px solid var(--line);border-radius:6px;background:var(--white);}
+  .picker-scroll{height:100%;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .picker-scroll::-webkit-scrollbar{display:none;}
+  .picker-item{height:44px;line-height:44px;text-align:center;scroll-snap-align:center;
+    font-family:'JetBrains Mono',monospace;font-size:15px;color:var(--muted);transition:color .1s,font-size .1s;}
+  .picker-item.sel{color:var(--navy);font-weight:700;font-size:18px;}
+  .picker-pad{height:88px;}
+  .picker-highlight{position:absolute;top:88px;left:0;right:0;height:44px;pointer-events:none;
+    border-top:1px solid var(--ochre);border-bottom:1px solid var(--ochre);background:rgba(185,129,47,0.06);}
+  .picker-labels{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px;margin-top:4px;}
+  .picker-labels span{text-align:center;font-size:11px;color:var(--muted);}
+
+  /* 가족관계 칩(태그) */
+  .chip-wrap{display:flex;flex-wrap:wrap;gap:6px;margin:-6px 0 16px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;background:var(--navy);color:#fff;
+    font-size:13px;padding:5px 8px 5px 12px;border-radius:16px;}
+  .chip-x{cursor:pointer;font-size:11px;width:16px;height:16px;border-radius:50%;
+    background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;}
+  .chip-x:active{background:rgba(255,255,255,0.5);}
+  .link-box{
+    display:flex;gap:8px;align-items:center;background:var(--paper-2);
+    border:1px dashed var(--line);padding:10px 12px;border-radius:3px;font-size:13px;
+  }
+  .link-box input{border:none;background:transparent;flex:1;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--navy);}
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);}
+  .toggle-row:first-of-type{border-top:none;}
+  .switch{position:relative;width:42px;height:24px;flex-shrink:0;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{position:absolute;cursor:pointer;inset:0;background:#cfc6b3;border-radius:24px;transition:.2s;}
+  .slider:before{content:"";position:absolute;height:18px;width:18px;left:3px;top:3px;background:white;border-radius:50%;transition:.2s;}
+  input:checked + .slider{background:var(--navy);}
+  input:checked + .slider:before{transform:translateX(18px);}
+
+  /* progress */
+  .progress-wrap{position:sticky;top:0;background:var(--paper);padding:14px 0 10px;z-index:5;}
+  .progress-track{height:5px;background:var(--paper-2);border-radius:3px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--ochre);transition:width .2s;}
+  .progress-label{font-size:12px;color:var(--muted);margin-top:6px;font-family:'JetBrains Mono',monospace;}
+
+  .qgroup{margin-bottom:22px;}
+  .qnum{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ochre);}
+  .qtext{font-size:15.5px;margin:4px 0 12px;color:var(--ink);}
+
+  /* 단일 문항 화면 */
+  .q-single{padding:30px 4px 10px;text-align:center;}
+  .q-single .qnum{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ochre);margin-bottom:14px;}
+  .q-big{font-size:22px;line-height:1.5;color:var(--navy);font-family:'Noto Serif KR',serif;font-weight:600;
+    margin:0 auto 30px;max-width:520px;min-height:66px;display:flex;align-items:center;justify-content:center;}
+  @media (max-width:400px){.q-big{font-size:19px;}}
+
+  .scale{display:flex;flex-direction:column;gap:10px;max-width:460px;margin:0 auto;}
+  .scale label{
+    border:1px solid var(--line);border-radius:8px;
+    padding:16px 18px;font-size:16px;color:var(--ink);cursor:pointer;background:var(--white);
+    display:flex;align-items:center;justify-content:center;transition:.12s;
+  }
+  .scale label .lab{font-size:16px;}
+  .scale input{position:absolute;opacity:0;pointer-events:none;}
+  .scale label.checked{border-color:var(--navy);background:var(--navy);}
+  .scale label.checked .lab{color:white;font-weight:600;}
+  .scale label:active{transform:scale(0.98);}
+
+  .stepnav{display:flex;justify-content:space-between;margin-top:26px;gap:10px;}
+
+  /* 시작화면 브로슈어 */
+  .intro-cover{text-align:center;padding:34px 20px 24px;margin-bottom:16px;
+    background:linear-gradient(160deg,#fbf6ef,#f1e9dc);border:1px solid var(--line);border-radius:6px;}
+  .intro-brand{font-size:34px;letter-spacing:.14em;color:#8a8378;font-weight:700;}
+  .intro-en{font-size:12px;color:var(--muted);letter-spacing:.05em;margin-top:10px;}
+  .intro-title{font-size:30px;color:var(--navy);margin:4px 0 6px;}
+  .intro-sub{font-size:15px;color:var(--ochre);font-weight:600;}
+  .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px;}
+  .type-card{text-align:center;padding:12px 6px;border:1px solid var(--line);border-radius:6px;background:var(--white);}
+  .type-num{width:30px;height:30px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;margin:0 auto 6px;}
+  .type-lab{font-size:11.5px;color:var(--ink);line-height:1.3;}
+  @media (max-width:400px){.type-lab{font-size:10.5px;}}
+
+  /* results */
+  .rank-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line);}
+  .rank-item:first-of-type{border-top:none;}
+  .rank-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:white;flex-shrink:0;}
+  .rank-name{flex:1;font-size:14.5px;}
+  .rank-name b{color:var(--navy);}
+  .rank-score{font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--muted);}
+  .type-desc{font-size:13px;color:var(--muted);margin-top:2px;}
+
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+
+  /* 결과화면 개선 */
+  .detail-section{margin-bottom:24px;}
+  .detail-section-title{
+    font-size:12.5px;font-weight:700;color:#5a5550;text-transform:uppercase;letter-spacing:.1em;
+    padding-bottom:10px;border-bottom:2px solid var(--line);margin-bottom:14px;
+  }
+  .detail-item{display:grid;grid-template-columns:75px 1fr;gap:16px;margin-bottom:14px;align-items:start;}
+  .detail-item-label{
+    font-size:13px;font-weight:700;color:var(--navy);
+  }
+  .detail-item-content{font-size:14.5px;color:var(--ink);line-height:1.8;}
+  .detail-item-content .sub{font-size:12.5px;color:var(--muted);display:block;margin-top:4px;}
+
+  .rank-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px;}
+  @media (max-width:500px){.rank-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
+  .rank-card{
+    background:linear-gradient(135deg, #fafaf7, #f6f2ea);border:1px solid #e5dcc9;border-radius:10px;
+    padding:16px 12px;text-align:center;transition:.15s;
+  }
+  .rank-card:active{transform:scale(0.98);}
+  .rank-card-num{
+    width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:700;color:white;font-size:18px;margin:0 auto 8px;
+  }
+  .rank-card-name{font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:3px;line-height:1.4;}
+  .rank-card-sub{font-size:11px;color:var(--muted);margin-bottom:8px;line-height:1.4;}
+  .rank-card-score{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--navy);}
+  .rank-card-score-label{font-size:10px;color:#999;display:block;margin-top:2px;}
+
+  /* 응답 목록 카드형 행 */
+  .list-row{display:flex;align-items:center;gap:12px;background:var(--white);border:1px solid var(--line);
+    border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.12s;}
+  .list-row:active{transform:scale(0.99);}
+  .list-row.sel{border-color:var(--navy);background:#eef0f7;}
+  .lr-check{font-size:18px;flex-shrink:0;}
+  .lr-main{flex:1;min-width:0;}
+  .lr-name{font-size:15.5px;font-weight:600;color:var(--ink);}
+  .lr-typename{font-size:12.5px;font-weight:400;color:var(--muted);margin-left:4px;}
+  .lr-info{font-size:12px;color:var(--muted);margin-top:2px;}
+  .lr-right{text-align:right;flex-shrink:0;}
+  .lr-type{display:inline-block;color:#fff;font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:12.5px;padding:3px 9px;border-radius:20px;}
+  .lr-date{font-size:11px;color:var(--muted);margin-top:4px;}
+  .lr-del{flex-shrink:0;font-size:16px;opacity:.5;padding:4px;}
+  .lr-del:active{opacity:1;}
+
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);}
+  th{color:var(--muted);font-weight:500;font-size:12px;}
+  tr:hover td{background:var(--paper-2);cursor:pointer;}
+
+  .top-result-banner{
+    text-align:center;padding:36px 24px;background:var(--navy);color:var(--white);
+    border-radius:8px;margin-bottom:24px;
+  }
+  .top-result-banner .eyebrow{color:#e3b06a;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;margin-bottom:10px;}
+  .top-result-banner h2{font-size:28px;margin:6px 0 8px;font-weight:700;}
+  .top-result-banner p{color:#d4d7f0;font-size:14px;max-width:480px;margin:0 auto;line-height:1.6;}
+
+  .site-footer{
+    max-width:760px;margin:20px auto 0;padding:22px 20px 40px;
+    border-top:1px solid var(--line);text-align:center;
+  }
+  .footer-brand{font-size:20px;letter-spacing:.12em;color:var(--navy);font-weight:700;}
+  .footer-line{font-size:12.5px;color:var(--muted);margin-top:4px;}
+  .footer-copy{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.6;}
+
+  /* 인쇄 오버레이: 화면에선 숨김, 인쇄할 때만 이것만 보임 */
+  #printArea{display:none;}
+  @media print{
+    body > *{display:none !important;}
+    #printArea{display:block !important;padding:0;max-width:640px;margin:0 auto;color:#20242b;}
+    #printArea h1{font-size:22px;margin:0 0 2px;}
+    #printArea .p-sub{color:#7a7266;font-size:13px;margin-bottom:16px;}
+    #printArea .p-banner{background:#232946 !important;color:#fff !important;border-radius:6px;padding:18px;text-align:center;margin-bottom:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    #printArea .p-banner .p-t{color:#e3b06a;font-size:11px;letter-spacing:.1em;}
+    #printArea .p-banner h2{margin:6px 0 4px;font-size:19px;}
+    #printArea .p-banner p{color:#c7cadf;font-size:12.5px;margin:0;}
+    #printArea .p-info{font-size:13px;line-height:1.8;margin-bottom:12px;}
+    #printArea .p-chart{text-align:center;margin:8px 0 14px;}
+    #printArea table{width:100%;border-collapse:collapse;font-size:13px;}
+    #printArea td{padding:7px 6px;border-bottom:1px solid #e5ddcc;}
+    #printArea .p-footer{margin-top:22px;border-top:1px solid #ddd;padding-top:12px;text-align:center;}
+    #printArea .p-footer .p-b{font-weight:700;letter-spacing:.1em;font-size:15px;color:#232946;}
+    #printArea .p-footer .p-c{font-size:11px;color:#7a7266;margin-top:6px;line-height:1.5;}
+    .p-badge{display:inline-block;width:20px;height:20px;border-radius:50%;color:#fff !important;text-align:center;line-height:20px;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+
+  @media print{
+    .no-print{display:none !important;}
+    body{background:white;}
+    .card{border:1px solid #ccc;}
+    .top-result-banner{background:white !important;color:var(--ink) !important;border:1px solid var(--navy);}
+    .top-result-banner .eyebrow{color:var(--ochre) !important;}
+    .top-result-banner p{color:var(--muted) !important;}
+    .site-footer{border-top:1px solid #ccc;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar no-print">
+  <div class="brand">
+    <svg width="22" height="22" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#232946" stroke-width="3"/><g id="starTop"></g></svg>
+    부부 성향 테스트
+  </div>
+  <div id="navRight"></div>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<footer class="site-footer">
+  <div class="footer-brand serif">AROM.D</div>
+  <div class="footer-line">커플 에니어그램 · 9개 유형에 따른 커플 분석</div>
+  <div class="footer-copy">© AROM.D. 본 검사지 및 문항의 저작권은 AROM.D에 있으며, 무단 복제·배포를 금합니다.</div>
+</footer>
+
+<div id="printArea"></div>
+
+<!-- Firebase SDK (compat 버전 - 전역 firebase 객체 사용) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+/* ================= Firebase 초기화 ================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBpl-f_KQe9cjrfthOalvPY6t8JKOAxNy4",
+  authDomain: "anyagram-86065.firebaseapp.com",
+  projectId: "anyagram-86065",
+  storageBucket: "anyagram-86065.firebasestorage.app",
+  messagingSenderId: "494199832878",
+  appId: "1:494199832878:web:60375224d767c341c97abf"
+};
+let _db = null;
+let FIREBASE_READY = false;
+try{
+  if(window.firebase && firebase.initializeApp){
+    firebase.initializeApp(FIREBASE_CONFIG);
+    _db = firebase.firestore();
+    FIREBASE_READY = true;
+  }
+}catch(e){ console.warn('Firebase 초기화 실패:', e); FIREBASE_READY = false; }
+
+// Firestore에 응답 저장
+async function fbSaveResponse(record){
+  if(!FIREBASE_READY) return false;
+  try{
+    // undefined 값은 Firestore가 거부하므로 JSON 왕복으로 제거
+    const clean = JSON.parse(JSON.stringify(record));
+    delete clean._pending; // 내부 플래그는 Firebase에 저장하지 않음
+    await _db.collection('responses').doc(clean.id).set(clean);
+    return true;
+  }catch(e){ console.warn('Firestore 저장 실패:', e); return false; }
+}
+// Firestore에서 전체 응답 불러오기
+async function fbGetResponses(){
+  if(!FIREBASE_READY) return null;
+  try{
+    const snap = await _db.collection('responses').orderBy('date','asc').get();
+    return snap.docs.map(d=>d.data());
+  }catch(e){ console.warn('Firestore 불러오기 실패:', e); return null; }
+}
+// Firestore에서 응답 삭제
+async function fbDeleteResponse(id){
+  if(!FIREBASE_READY) return false;
+  try{ await _db.collection('responses').doc(id).delete(); return true; }
+  catch(e){ console.warn('Firestore 삭제 실패:', e); return false; }
+}
+// 공용 설정(결과 즉시 표시 여부 등)을 Firebase에 저장/조회 → 모든 기기 공유
+async function fbSaveSettings(s){
+  if(!FIREBASE_READY) return false;
+  try{ await _db.collection('config').doc('settings').set(JSON.parse(JSON.stringify(s))); return true; }
+  catch(e){ console.warn('설정 저장 실패:', e); return false; }
+}
+async function fbGetSettings(){
+  if(!FIREBASE_READY) return null;
+  try{
+    const doc = await _db.collection('config').doc('settings').get();
+    return doc.exists ? doc.data() : null;
+  }catch(e){ console.warn('설정 조회 실패:', e); return null; }
+}
+</script>
+
+<script>
+/* ================= 설정 ================= */
+// Web3Forms 접근 키 (결과 이메일 자동 전송용). 바꾸려면 아래 값만 교체하세요.
+// 결과 이메일 자동 전송 기능 — 현재 비활성화 (사용하려면 Web3Forms 키를 넣으세요)
+const WEB3FORMS_KEY = "";
+
+/* ================= 데이터 ================= */
+const QUESTIONS = [
+"나는 생각하기 위해서 사적 공간이 필요하다.","나는 매사에 수용적이다.","나는 모든 일을 개선하려고 노력한다.","나는 리더십이 있다.","나는 감성적이어서 혼자 있을 때가 많다.",
+"나는 자발적으로 재미있는 일을 즐긴다.","나는 다른 사람들과 함께 일하기를 좋아한다.","나는 문제가 있으면 해결될 때까지 그것만 생각한다.","나는 내 뜻대로 결정하려고 한다.","나는 해야할 일을 미루는 편이다.",
+"나는 공적인 것보다 개인 생활에 관심이 더 많다.","나는 모든 일들이 순조롭게 진행되길 원한다.","나는 나만의 고상한 취미를 즐긴다.","나의 관심사는 다른 사람을 보살피는 것이다.","나는 모험심이 많다.",
+"나는 능력을 인정받기 위해 노력한다.","나는 낭만적이고 예술가 기질이 있다.","나는 끊임없이 변화하는 생활을 좋아한다.","나는 다른 사람들을 지나치게 칭찬한다.","나는 속상한 일이 생기면 피하려고 한다.",
+"나는 옳지 않은 일을 보면 화가 난다.","나는 명확한 지침이 있는 일을 선호한다.","나는 다른 사람의 생각에 공감을 잘한다.","나는 늘 강해야 한다고 생각한다.","나는 도덕적으로 자제력이 강한 사람이다.",
+"나는 사랑하는 사람조차도 가끔 의심하는 경향이 있다.","나는 사람들과 좋은 관계를 유지하려 한다.","나는 자극과 흥분을 유발하는 활동을 좋아한다.","나는 분석적인 사고를 한다.","나는 과정보다는 결과를 중요하게 여긴다.",
+"나는 어린아이처럼 유쾌하다.","나는 인간 중심적이기보다는 오히려 일 중심적이다.","나의 행동은 원칙에 기초를 둔다.","나는 사소한 일에도 걱정이 많다.","나는 완벽을 위해 끝까지 노력한다.",
+"나는 다른 사람들을 지배하려는 경향이 있다.","나는 나 자신이 이방인처럼 느껴질 때가 있다.","나는 시간이나 돈을 아끼는 편이다.","나는 적응력이 뛰어나 상황에 잘 대처한다.","나는 소속집단에 협력하여 책임감을 발휘한다.",
+"나는 나만의 독특한 감정을 가지고 있다.","나는 일을 과감하게 추진한다.","나는 가끔 분위기에 따라 기분이 변한다.","나는 공격적으로 내 주장을 말한다.","나는 경쟁심이 강하다.",
+"나의 관심사는 나를 둘러싼 세계를 이해하는 것이다.","나는 다른 사람들을 통제하려 한다.","나는 다른 사람들을 도와줄 때 기분이 좋다.","나는 안전을 중요하게 생각한다.","나는 성취지향적이다.",
+"나는 다른 사람들의 의견에 생각없이 동조하는 편이다.","나는 사람들을 잘 배려한다.","나는 다른 사람들에게 동기를 부여해서 이끌어 간다.","나는 때때로 엄격하여 융통성이 없다.","나는 세상의 일들과 조화롭게 흘러가고 싶다.",
+"나는 스스로 고립된 생각에 빠지기도 한다.","나는 낙천적으로 세상을 살아간다.","나는 강한 자신감으로 사람들을 설득한다.","나는 겁이 많다.","나는 일을 공평하게 처리한다.",
+"나는 다른 사람들이 하는 일에 상관하지 않는 편이다.","나는 사람들과 친해지려고 노력한다.","나는 항상 새로운 경험을 추구한다.","나는 특별한 것을 보면 부럽다.","나는 옳고 그름이 분명하여 때로는 비판적이다.",
+"나는 성공해야만 사랑받을 수 있다고 믿는다.","나는 같은 일을 계속하면 지루하다.","나는 이성적으로 냉철하게 생각하는 편이다.","나는 잘못될까봐 결정을 망설인다.","나는 조화로움을 추구하는 평화주의자다.",
+"나는 맡은 일을 효율적으로 처리한다.","나는 다른 사람이 속상할까봐 내 감정을 표현하지 않는다.","나는 나의 양심에 따라 행동한다.","나는 어떤 일을 잘 하다가도 혼자 우울해지기도 한다.","나는 모든 것을 머리로 이해하고 판단한다.",
+"나는 충성할 만한 사람에게는 헌신할 수 있다.","나는 다른 사람의 호감을 얻기 위해 노력한다.","나는 뒤떨어지지 않기 위해 무엇인가를 끊임없이 행한다.","나는 참을성이 없는 편이다.","나는 평범한 삶의 방식을 싫어한다.",
+"나는 친하게 지내는 사람과는 영원한 우정을 유지하려고 노력한다."
+]; // index 0 = 문항1
+
+const TYPES = [
+  {id:1, name:"개혁가", sub:"완벽주의자", tagline:"합리적이고 이상을 추구하는 유형", items:[3,21,25,33,35,54,60,65,73],
+    desc:"옳고 그름이 분명하며 양심적이고 윤리적입니다. 매사에 완벽을 기하고 원칙을 지키며, 스스로 이상적 가치를 추구하고 이를 위한 노력을 아끼지 않습니다. 항상 올곧은 자세를 잃지 않으며 실수하지 않으려 노력하고 정리정돈을 잘하며 높은 기준을 가지고 있습니다. 그러나 자신과 타인에 대해 비판적이고 지나친 완벽주의자가 될 수 있습니다.",
+    strength:"이상적이고 원칙을 중시하고 정돈을 잘하고 예의 바르고 양심적이고 윤리적", weakness:"비판적이고 남을 판단하고 유연하지 못하고 엄격하고 독단적", growth:"다른 사람의 약점보다 강점을 보라 · 세상일이 뜻대로 되지 않음을 알아라 · 사람들을 너그럽게 대하라", motto:"심판하는 사람은 사랑할 시간이 없다", jobs:"경찰관, 공인회계사, 관세사, 기업관리직, 기자, 노무사, 도시계획가, 물류관리사, 번역가, 법무사, 변리사, 변호사, 사회과학연구원, 사회단체활동가, 성직자, 소방관, 시스템운영관리자, 은행원, 의료장비기사, 의사, 이공계열교수, 인문계 중등교사, 인문과학연구원, 전문비서, 조사전문가, 지휘가, 직업군인, 판사, 행사기획자, 회계사무원"},
+  {id:2, name:"조력가", sub:"사랑주의자", tagline:"남을 위하고 대인관계를 존중하는 유형", items:[7,14,19,23,48,52,62,72,77],
+    desc:"정이 많고 따뜻한 마음을 지녔습니다. 친절하고 다정하며 주위 사람들을 돕기 위해 자신을 희생합니다. 곤경에 빠진 사람들을 잘 돕지만 정작 자신이 도움이 필요할 때는 자각하지 못합니다. 대체로 사려 깊고 타인들과 가까워지려고 노력합니다. 그러나 남들이 자신을 필요한 사람으로 인식하게 하려고 일부러 아첨과 아부를 하기도 합니다.",
+    strength:"관대하고 이해심이 많고 동정심이 많고 남을 도와주고 적응력이 뛰어나고 사랑을 나눠준다", weakness:"의존적이고 독점적이고 아첨을 하고 타인의 일에 끼어들고 조종하려 한다", growth:"남을 사랑하려면 나를 먼저 사랑하라 · 내가 원하는 것을 분명히 말하라 · 모든 사람이 나를 좋아할 수는 없다", motto:"은혜를 베풀되 보답을 바라지 말라", jobs:"간병인, 간호사, 마케팅리서치, 메이크업아티스트, 문화재보존원, 방사선사, 보육교사, 비행기승무원, 사회단체활동가, 사회복지사, 상담전문가, 쇼핑호스트, 아나운서, 안경사, 애완동물미용사, 여행서비스종사자, 웨딩플래너, 유치원 교사, 요리사, 응급구조사, 인문계열교수, 일반공무원, 장례지도사, 초등학교교사, 치과기공사, 치과위생사, 커플매니저, 텔레마케터, 특수학교교사, 피부미용사"},
+  {id:3, name:"성취자", sub:"성공주의자", tagline:"실용적이고 성공 지향적인 유형", items:[16,30,32,39,45,50,66,71,78],
+    desc:"자신감이 있고 주위 사람들에게 좋은 인상을 심어줍니다. 야망이 크고 유능하며 에너지가 넘칩니다. 성공을 위해서는 자신의 생활을 희생시키더라도 개의치 않으며 경쟁심이 있습니다. 협상에 능하고 실적을 중시하는 열정적인 사람입니다. 그러나 자신의 실제 이미지와 남들이 생각하는 자기 이미지에 대해 지나치게 신경을 쓰기도 합니다.",
+    strength:"성취적이고 효율적이고 실용적이고 부지런하고 긍정적이고 목표지향적이다", weakness:"허영심이 있고 이미지를 의식하고 겉치레하고 허위적이고 자기도취에 빠진다", growth:"친구들과 협력해서 일하고 성공하라 · 서두르지 말고 여유를 가지라 · 결과를 부풀리지 말고 정직하라", motto:"정직이 최선의 방책이다", jobs:"가상현실전문가, 경영컨설턴트, 관세사, 광고 및 홍보전문가, 교육계열 대학교수, 네트워크엔지니어, 데이터베이스 관리자, 리포터, 병원코디네이터, 보석감정사, 보험대리인, 상품중개인, 생명과학연구원, 시각디자이너, 실내장식디자이너, 아나운서, 연예인 및 스포츠매니저, 영업사원, 외환딜러, 요리사, 운동코치, 원예전문가, 자동차 공학기술자, 전문비서, 제품디자이너, 컴퓨터프로그래머, 투자분석가, 프로게이머, 회계사, 호텔지배인"},
+  {id:4, name:"예술가", sub:"개성주의자", tagline:"감성적이고 낭만적인 유형", items:[5,13,17,37,41,43,64,74,80],
+    desc:"감정적으로 정직하고 창의력이 뛰어납니다. 자신을 잘 알며 감수성이 뛰어나고 민감하며 말수가 적습니다. 스스로를 특별한 사람이라고 생각합니다. 이해심이 많고 따뜻하며 격려하는 것을 좋아합니다. 다른 사람들보다 삶의 의미, 슬픔이나 고독에 민감하고 감정을 중시합니다. 그러나 자의식이 강하고 우울증, 방종, 자기 연민에 빠지기도 합니다.",
+    strength:"섬세하고 독창적이고 예술적이고 유행에 민감하고 교양있고 감정이 풍부하다", weakness:"우울하고 소유욕이 많고 자의식이 강하고 과민하고 움츠러들고 자기학대적이다", growth:"모든 것이 내 책임이라고 자책하지 마라 · 자신감을 가지고 다른 사람과 어울려라 · 자신의 예술 감각/정서를 소중히 여겨라", motto:"부러워만하다 소중한 것을 잃는다", jobs:"관광기획자, 광고 및 홍보전문가, 국악인, 금속 및 보석세공원, 레크레이션강사, 리포터, 만화가 및 애니메이터, 메이크업 아티스트, 모델, 무용가, 미용사, 사진작가, 쇼핑호스트, 악기수리사, 조율사, 여행상품개발원, 연예인, 연주가, 음향 및 녹음기사, 인테리어디자이너, 작가, 작곡가, 제과 제빵사, 제품디자이너, 조리사, 주방장, 직업상담사, 취업알선가, 촬영기사, 컬러리스트, 패션디자이너, 플로리스트"},
+  {id:5, name:"사색가", sub:"관찰주의자", tagline:"지적이고 분석적인 유형", items:[1,8,11,29,38,46,56,68,75],
+    desc:"통찰력이 뛰어나며 명석하고 호기심이 많습니다. 현실을 파악하는 관찰력과 집중력이 뛰어나며 말이 적고 태도가 조심스럽습니다. 객관적이고 혁신적이며 독창적입니다. 고독을 즐기는 경향이 강하고 자신만의 시간과 공간을 중요하게 여깁니다. 끈기가 있고 현명하며 분석적인 태도로 상황을 파악합니다. 그러나 허무주의와 고립에 빠지기도 합니다.",
+    strength:"분석적이고 관찰적이고 초연하고 현명하고 객관적이고 호기심이 많다", weakness:"내성적이고 공상적이고 인색하고 논쟁적이고 소극적이고 감정이 없다", growth:"생각만 하지 말고 행동으로 옮겨라 · 내가 아는 정보와 생각을 공유하라 · 함께 어울려 도우며 살아라", motto:"행함이 없는 철학은 사상누각이다", jobs:"가상현실전문가, 건축감리기술자, 국제무역가, 기계공학기술자, 기자, 농장경영자, 반도체공학기술자, 변호사, 비행기 조종사, 사회단체활동가, 산업공학기술자, 산업안전원, 상품중개인, 성직자, 손해사정사, 스포츠에이전트, 에너지공학기술자, 의사, 자산운용가, 자연과학시험원, 자연과학연구원, 전기공학기술자, 정보보호전문가, 증권분석가, 캐드원, 통신공학기술자, 품질관리 사무원, 학원강사, 환경공학기술자, 회계사무원"},
+  {id:6, name:"충성가", sub:"안전주의자", tagline:"전통을 중시하고 책임감 있는 유형", items:[22,26,34,40,49,59,69,76,81],
+    desc:"의지할 수 있고 책임감이 강하고 믿을 만합니다. 훌륭한 '문제 해결사'로 협력을 이끌어 내는 능력이 있습니다. 친구나 공동체, 자기의 신념에 충실하고 매우 헌신적입니다. 조직 내에서 안정과 조화를 이루려 하고 전통을 중시하며 신중하고 협조적입니다. 그러나 방어적이고 회의적이며 안전하지 못하면 반항적이 되고 스트레스를 받습니다.",
+    strength:"충실하고 친절하고 협력하고 남을 존중하고 믿을 수 있고 용감하다", weakness:"겁이 많고 의심이 많고 확신이 없고 방어적이고 불안해하고 권위적이다", growth:"여유를 가져라 · 너무 걱정하지 말고 용기를 가져라 · 자신을 믿고 과감하게 행동하라", motto:"걱정의 96%가 쓸데없는 것이다", jobs:"간호사, 교육 및 훈련사무원, 교육행정사무원, 기록물관리사, 동물사육사, 물리치료사, 병원행정사무원, 보건교사, 보육교사, 사회복지사, 수의사, 약사, 역사학 연구원, 영양사, 운동코치, 원예전문가, 음악치료사, 의무기록사, 일반비서, 작가, 전문비서, 직업상담사, 초중고교사, 촬영기사 및 방송장비기술자, 판사, 검사, 편집인, 학예사, 한의사, 항공 사무원, 행정공무원"},
+  {id:7, name:"열정가", sub:"낙천주의자", tagline:"활동적이고 개방적인 유형", items:[6,15,18,28,31,57,63,67,79],
+    desc:"외향적이고 긍정적이며 다재다능하고 자발적입니다. 노는 것을 즐기며 밝고 명랑합니다. 삶을 긍정적으로 바라보고 스스로도 매력적인 인간이 되려 합니다. 아이디어와 상상력이 풍부하며 늘 새롭고 신나는 경험을 찾아 행동으로 옮깁니다. 그러나 계획을 세우고 끝까지 해내지 못하기도 하며 참을성이 부족하고 산만합니다.",
+    strength:"낙관적이고 사교적이고 즐겁고 상상력이 풍부하고 쾌활하고 모험을 좋아한다", weakness:"도피주의적이고 산만하고 쾌락주의적이고 자제력이 없고 쉽게 중독되고 광적이다", growth:"재미보다 의미있는 일을 하라 · 하고 있는 일을 끝내고 다음 일을 하라 · 구체적으로 계획해서 행동하라", motto:"오늘 일을 내일로 미루지 말라", jobs:"가수, 가축사육자, 감정평가사, 건축가, 공인회계사, 과학자, 광고 홍보 전문가, 마케팅리서치연구원, 만화가, 바이어(구매인), 바텐더, 부동산중개인, 사진작가, 사회과학계열 대학교수, 사회복지사, 쇼핑호스트, 시각디자이너, 시장 및 여론조사전문가, 심리상담가, 심리학자, 애니메이터, 여행상품개발원, 촬영기사, 역사학자, 연기자, 연예인 매니저, 영화감독, 예체능계열 대학교수, 웹디자이너, 멀티미디어디자이너, 임상심리사"},
+  {id:8, name:"지도자", sub:"도전주의자", tagline:"힘이 있고 통솔하는 유형", items:[4,9,24,36,42,44,47,53,58],
+    desc:"자신감이 넘치고 자기주장이 강하고 리더십이 있습니다. 약자 편에 서서 그들을 보호하려 합니다. 자신이 옳다고 생각하는 것은 전력을 다해 소신껏 행동하고, 빙 돌리지 않고 직선적으로 표현하며 결단성이 있고 적극적입니다. 그러나 주변 환경 특히 사람들을 통제하려 하고 남들과 대결을 하며 협박하기도 합니다. 자신에게 약점이 있다는 것을 인정하기 어려워합니다.",
+    strength:"현실적이고 활발하고 자신감 있고 강하고 겁이 없고 도전적이다", weakness:"공격적이고 강압적이고 반항적이고 자기중심적이고 오만하고 가혹하다", growth:"다른 사람의 말을 귀담아 들으라 · 권위는 강함이 아니라 배려에서 나온다 · 주장만 하지 말고 대화로 풀어라", motto:"내가 하기 싫은 일은 남도 하기 싫어한다", jobs:"감정평가사, 건설기계운전원, 건축공학기술자, 경영계열 교수, 경호원, 교도관, 국제무역가, 금융자산운용가, 기업고위 임원, 농장경영자, 변호사, 사회단체활동가, 상품중개인, 성직자, 스포츠강사, 스포츠에이전트, 운동선수, 자영업, 잡지기자, 조경기술자, 지하철기관사, 철도기관사, 통역가, 판사, 검사, 항공교통관제사, 항공기정비원, 항공기조종사, 항해사, 행사기획자, 호텔지배인"},
+  {id:9, name:"중재자", sub:"평화주의자", tagline:"조화롭고 평화를 사랑하는 유형", items:[2,10,12,20,27,51,55,61,70],
+    desc:"포용하고 수용할 줄 알며 안정적입니다. 갈등이나 긴장을 피하는 평화주의자로 여유롭고 인내심이 있습니다. 편견이 없고 다른 사람의 기분을 이해할 줄 알고 좋은 관계를 유지합니다. 온순하며 분위기를 평화롭게 잘 조정합니다. 그러나 평화를 유지하기 위해 좋은 관계에 지나치게 집착하거나, 갈등을 피하고 문제를 단순화시키며 나쁜 일을 축소시키려는 경향이 있습니다.",
+    strength:"평화적이고 침착하고 위안을 주고 인내심이 강하고 온순하고 끈기가 있다", weakness:"게으르고 잘 잊고 결정을 못하고 무감각하고 수동적이고 허무주의적이다", growth:"평화를 위해 문제를 덮지 마라 · 선택하고 집중하여 실행하라 · 결정을 미루지 말고 게으름 피지 마라", motto:"결단을 내리지 않는 것이 가장 큰 해악이다", jobs:"가정의학과 의사, 고객상담원, 놀이치료사, 동물조련사, 법무사 및 집행관, 변호사, 부부상담전문가, 사서 교사, 사회계열 교수, 사회복지사, 성직자, 속기사, 손해사정사, 심리학 연구자, 영양사, 외교관, 응급구조사, 의무기록사, 이학계열교수, 인적자원전문가, 일반사무직, 자영업자, 자연계중등학교교사, 전문비서, 제과 제빵사, 직업능력훈련개발교사, 청소년지도사, 치과의사, 판사, 검사, 한의사, 호텔지배인, 환경공학기술자"},
+];
+
+// 날개(Wing) 이름 — KEEC 공식 자료
+const WING_NAMES = {
+  '1W9':'이상주의자','1W2':'사회변혁주의자',
+  '2W1':'봉사자','2W3':'주인/안주인',
+  '3W2':'매력적인 사람','3W4':'전문가',
+  '4W3':'귀족','4W5':'보헤미안',
+  '5W4':'인습타파주의자','5W6':'문제해결자',
+  '6W5':'방어자','6W7':'친구',
+  '7W6':'엔터테이너','7W8':'현실주의자',
+  '8W7':'독립자','8W9':'곰',
+  '9W8':'조정자','9W1':'몽상가',
+};
+const WING_DESC = {
+  '1W9':'좀 더 느긋하고 차분하며, 완벽하기 위해 종종거리지 않고 즐길 줄 압니다. 타인의 나쁜 면을 보기보다 조화를 찾게 됩니다.',
+  '1W2':'좀 더 너그럽고, 타인들을 돕는 일에 관심이 많습니다. 일과 타인과의 생활에 조화를 이룹니다.',
+  '2W1':'좀 더 진지하고 정확하며 일에 집중합니다. 하고 싶은 말을 용기 있게 하고, 옳은 것이라 생각되면 실행합니다.',
+  '2W3':'좀 더 다른 사람들의 사랑을 많이 받으며 성공에 관심이 많습니다. 자기 자신을 믿고 독립적으로 생활합니다.',
+  '3W2':'좀 더 이해심이 많고 사람을 돕는 일을 좋아합니다. 사람들과 잘 지내고 친해지는 것을 더 중요하게 생각합니다.',
+  '3W4':'좀 더 감정이 풍부하고 예술 활동에 관심이 많아집니다. 성공만이 삶의 전부가 아니라는 것을 압니다.',
+  '4W3':'좀 더 활발하고 세련되어지고 일을 효율적으로 합니다. 좋은 결과가 있는 일은 어려워도 해보려 합니다.',
+  '4W5':'좀 더 자신만의 스타일을 좋아하며 분석적이 됩니다. 기분대로 행동하지 않기 때문에 더 안정적이 됩니다.',
+  '5W4':'좀 더 감정이 풍부하고 예술적인 감각이 있습니다. 다른 사람의 문제에 동정심을 느끼게 됩니다.',
+  '5W6':'좀 더 신중하게 생각해서 일을 합니다. 책임감 있게 행동합니다.',
+  '6W5':'좀 더 관찰을 많이 하고 객관적으로 판단합니다. 겉모습보다 자신의 내면을 중시하고 정보를 열심히 모읍니다.',
+  '6W7':'좀 더 활달하고 긍정적입니다. 신중한 성격에 스스로 알아서 하려는 마음이 더해져 균형을 이룹니다.',
+  '7W6':'좀 더 집단생활에 충실해지고 실력을 쌓으려 노력하게 됩니다. 자기가 하고 싶은 것을 꾸준히 하게 됩니다.',
+  '7W8':'좀 더 주장이 강해지고 자신감이 생깁니다. 책임감이 강해지고 리더십을 발휘합니다.',
+  '8W7':'좀 더 힘이 넘치고 독립적이며 모험을 좋아합니다. 상상력이 있으며 제멋대로 하려 하지 않습니다.',
+  '8W9':'좀 더 따뜻하고 차분하며 사람들과 잘 지내는 것을 중요하게 생각합니다. 너그러운 마음을 갖게 됩니다.',
+  '9W8':'좀 더 자신감이 있으며 스스로 알아서 결정합니다. 어떤 일을 할 때 대충하지 않고 제대로 할 수 있는 방법을 찾습니다.',
+  '9W1':'좀 더 우선순위를 잘 정해서 먼저 할 일과 나중 할 일을 구별할 줄 압니다. 어려운 일도 피하지 않고 해결하려 합니다.',
+};
+
+const itemToType = {};
+TYPES.forEach(t=>t.items.forEach(i=>itemToType[i]=t.id));
+
+// 분열(스트레스)/통합(안정) 방향 — KEEC 자료
+// 분열: 1→4→2→8→5→7→1, 9→6→3→9  /  통합은 그 역방향
+const DISINTEGRATION = {1:4, 4:2, 2:8, 8:5, 5:7, 7:1, 9:6, 6:3, 3:9};
+const INTEGRATION     = {4:1, 2:4, 8:2, 5:8, 7:5, 1:7, 6:9, 3:6, 9:3};
+// 유형별 변화 방향을 쉬운 문장으로 설명
+const GROWTH_DESC = {
+  1:"마음이 편안해지면 7번 열정가처럼 밝고 여유로워지며 즐길 줄 알게 됩니다.",
+  2:"마음이 편안해지면 4번 예술가처럼 자기 감정을 솔직하게 표현하게 됩니다.",
+  3:"마음이 편안해지면 6번 충성가처럼 협력하고 책임감 있게 행동하게 됩니다.",
+  4:"마음이 편안해지면 1번 개혁가처럼 원칙을 지키고 차분하게 실천하게 됩니다.",
+  5:"마음이 편안해지면 8번 지도자처럼 적극적이고 자신감 있게 행동하게 됩니다.",
+  6:"마음이 편안해지면 9번 중재자처럼 안정되고 평화롭게 여유를 찾게 됩니다.",
+  7:"마음이 편안해지면 5번 사색가처럼 깊이 몰입하고 진지해집니다.",
+  8:"마음이 편안해지면 2번 조력가처럼 따뜻하게 남을 배려하게 됩니다.",
+  9:"마음이 편안해지면 3번 성취자처럼 활기차고 목표를 향해 나아가게 됩니다."
+};
+const STRESS_DESC = {
+  1:"스트레스를 받으면 4번 예술가의 약점처럼 우울해지고 감정 기복이 커집니다.",
+  2:"스트레스를 받으면 8번 지도자의 약점처럼 공격적이고 지배하려 듭니다.",
+  3:"스트레스를 받으면 9번 중재자의 약점처럼 무기력해지고 회피하게 됩니다.",
+  4:"스트레스를 받으면 2번 조력가의 약점처럼 집착하고 매달리게 됩니다.",
+  5:"스트레스를 받으면 7번 열정가의 약점처럼 산만해지고 충동적이 됩니다.",
+  6:"스트레스를 받으면 3번 성취자의 약점처럼 조급해지고 겉모습에 집착합니다.",
+  7:"스트레스를 받으면 1번 개혁가의 약점처럼 비판적이고 완벽주의에 빠집니다.",
+  8:"스트레스를 받으면 5번 사색가의 약점처럼 위축되고 사람을 멀리하게 됩니다.",
+  9:"스트레스를 받으면 6번 충성가의 약점처럼 불안해지고 의심이 많아집니다."
+};
+// 유형별 핵심 키워드 (커플 프로파일 배지용)
+const TYPE_KEYWORDS = {
+  1:"완벽FM,원칙,윤리,도덕적,정의감,정돈,양심,관찰",
+  2:"배려,희생,친절,다정,공감,이타적,돌봄",
+  3:"성공,목표,효율,실용적,자신감,열정,성취",
+  4:"감성,창의력,개성,섬세함,낭만,특별함,예술",
+  5:"분석,관찰,지식,통찰력,집중,객관적,탐구",
+  6:"책임감,신중,협조,안전,헌신,의리,성실",
+  7:"낙천,활동적,아이디어,모험,유머,자발적,즐거움",
+  8:"리더,결단력,추진력,보호,직선적,자신감,힘",
+  9:"평화,포용,인내심,온화,조화,수용,안정"
+};
+function typeDirections(mainId){
+  return {
+    stress: DISINTEGRATION[mainId],   // 스트레스 상황에서 닮아가는 유형(불건강)
+    growth: INTEGRATION[mainId],      // 안정/건강 상황에서 닮아가는 유형
+  };
+}
+
+const typeColor = id => {
+  const hue = (220 + (id-1)*38) % 360;
+  return `hsl(${hue},38%,38%)`;
+};
+const typeColorLight = id => {
+  const hue = (220 + (id-1)*38) % 360;
+  return `hsl(${hue},55%,88%)`;
+};
+
+// 참고 프로파일 가로축 순서: 2,3,4,5,6,7,8,9,1
+const PROFILE_ORDER = [2,3,4,5,6,7,8,9,1];
+
+function typeById(id){ return TYPES.find(t=>t.id===id); }
+
+// 대표 유형의 날개 계산: 양옆(원형 1↔9 인접) 유형 중 점수가 높은 쪽
+function calcWing(scores){
+  const ranked = TYPES.map(t=>({id:t.id, score:scores[t.id]})).sort((a,b)=>b.score-a.score);
+  const main = ranked[0].id;
+  const left = main===1 ? 9 : main-1;
+  const right = main===9 ? 1 : main+1;
+  const wing = (scores[left] >= scores[right]) ? left : right;
+  const label = `${main}W${wing}`;
+  return { main, wing, label, wingName: WING_NAMES[label]||'', wingDesc: WING_DESC[label]||'' };
+}
+
+/* ================= 저장소 (브라우저 localStorage 사용) ================= */
+function _lsGet(key, fallback){
+  try{
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  }catch(e){ return fallback; }
+}
+function _lsSet(key, val){
+  try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+}
+function getResponses(){ return _lsGet('kepti_responses', []); }
+function saveResponses(list){ _lsSet('kepti_responses', list); }
+function getSettings(){ return _lsGet('kepti_settings', {showResultImmediately:false}); }
+function saveSettings(s){ _lsSet('kepti_settings', s); }
+function saveDraft(){
+  const draft = { answers: state.answers, page: state.page, meta: state.meta, ts: Date.now() };
+  _lsSet('kepti_draft', draft);
+}
+function getDraft(){ return _lsGet('kepti_draft', null); }
+function clearDraft(){ try{ localStorage.removeItem('kepti_draft'); }catch(e){} }
+function draftHasProgress(d){
+  return d && ((d.answers && Object.keys(d.answers).length>0) || (d.meta && d.meta.name));
+}
+
+// 사용자 입력(이름/직업 등) HTML 이스케이프 — 특수문자로 화면 깨짐 방지
+function esc(s){
+  if(s===undefined || s===null) return '';
+  return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// 한글 문자열에서 초성만 추출 (예: "손성지" → "ㅅㅅㅈ")
+const _CHOSEONG = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+function toChoseong(str){
+  let out = '';
+  for(const ch of String(str)){
+    const code = ch.charCodeAt(0);
+    if(code >= 0xAC00 && code <= 0xD7A3){
+      out += _CHOSEONG[Math.floor((code - 0xAC00) / 588)];
+    } else {
+      out += ch; // 한글 아니면 그대로 (자음 낱글자 포함)
+    }
+  }
+  return out;
+}
+// 검색어가 초성만으로 이뤄졌는지 (ㅅ, ㄱㅎ 등)
+function isChoseongQuery(q){
+  return q.length>0 && [...q].every(c=>_CHOSEONG.includes(c));
+}
+// 한 글자의 초성 반환 (한글 음절이 아니면 null)
+function _choOf(ch){
+  const code = ch.charCodeAt(0);
+  if(code >= 0xAC00 && code <= 0xD7A3) return _CHOSEONG[Math.floor((code - 0xAC00) / 588)];
+  return null;
+}
+// 검색어를 글자 단위로 비교 (초성·완성글자 섞여도 매칭: "김ㅇ" → "김아름" ✓)
+function _koMatchAt(name, q, start){
+  for(let i=0;i<q.length;i++){
+    const n = name[start+i];
+    if(n === undefined) return false;
+    const qc = q[i];
+    if(_CHOSEONG.includes(qc)){
+      if(_choOf(n) !== qc) return false;        // 초성 비교
+    } else if(n !== qc){
+      return false;                              // 완성글자는 그대로 비교
+    }
+  }
+  return true;
+}
+function koStartsWith(name, q){ return _koMatchAt(String(name||''), q, 0); }
+function koIncludes(name, q){
+  const s = String(name||'');
+  for(let i=0; i+q.length<=s.length; i++){ if(_koMatchAt(s, q, i)) return true; }
+  return false;
+}
+
+/* ================= 상태 ================= */
+// 메인 주소(/) = 관리자, 응답자는 ?u 또는 #user 로 접속
+// IS_USER: 응답자 모드 여부 / IS_ADMIN: 관리자 모드 여부 (응답자가 아니면 관리자)
+const _params = new URLSearchParams(location.search||'');
+const IS_USER = _params.has('u') || (location.hash||'').indexOf('user') > -1;
+const IS_ADMIN = !IS_USER;
+
+// 관리자 비밀번호 (SHA-256 해시로 저장 — 소스에 비밀번호가 그대로 노출되지 않음)
+// 현재 비밀번호: 3414  /  바꾸고 싶으면 새 비밀번호의 SHA-256 해시로 아래 값만 교체
+const ADMIN_PASSWORD_HASH = "801f8522550bb91046be645c095a7559888de63b4b49079dc3c400b6c004e588";
+async function sha256Hex(str){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+async function checkAdminAuth(){
+  if(!IS_ADMIN) return true;
+  try{
+    const saved = localStorage.getItem('kepti_admin_auth');
+    if(saved === ADMIN_PASSWORD_HASH) return true; // 이 기기에서 이미 인증됨
+  }catch(e){}
+  return false;
+}
+
+// 앱 디자인에 맞춘 관리자 잠금 화면
+function renderAdminLock(){
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div style="max-width:380px;margin:48px auto 0;">
+      <div class="card" style="text-align:center;padding:36px 26px;">
+        <div style="font-size:44px;margin-bottom:12px;">🔐</div>
+        <h3 style="margin:0 0 6px;font-size:20px;color:var(--navy);">관리자 인증</h3>
+        <p style="color:var(--muted);font-size:13.5px;margin:0 0 20px;">관리자 비밀번호를 입력해주세요</p>
+        <input type="password" inputmode="numeric" id="adminPwInput" autocomplete="off"
+          style="width:100%;box-sizing:border-box;padding:14px;border:1.5px solid var(--line);border-radius:8px;font-size:20px;text-align:center;letter-spacing:.3em;background:var(--white);color:var(--ink);">
+        <div id="adminPwErr" style="color:#b5462f;font-size:12.5px;min-height:18px;margin:8px 0 10px;"></div>
+        <button class="btn-primary btn-block" id="adminPwBtn" style="padding:14px;font-size:15px;">확인</button>
+        <button class="btn-ghost btn-block" id="adminPwCancel" style="margin-top:8px;">응답자 페이지로 이동</button>
+      </div>
+    </div>`;
+  const input = document.getElementById('adminPwInput');
+  const err = document.getElementById('adminPwErr');
+  let tries = 0;
+  const doCheck = async ()=>{
+    const pw = input.value;
+    if(!pw){ err.textContent = '비밀번호를 입력해주세요.'; return; }
+    const h = await sha256Hex(pw);
+    if(h === ADMIN_PASSWORD_HASH){
+      try{ localStorage.setItem('kepti_admin_auth', h); }catch(e){}
+      render();
+    } else {
+      tries++;
+      if(tries >= 3){
+        alert('비밀번호 3회 오류로 응답자 페이지로 이동합니다.');
+        location.href = location.pathname + '?u';
+        return;
+      }
+      err.textContent = `비밀번호가 올바르지 않습니다. (남은 시도 ${3-tries}회)`;
+      input.value = ''; input.focus();
+    }
+  };
+  document.getElementById('adminPwBtn').onclick = doCheck;
+  input.onkeydown = (e)=>{ if(e.key==='Enter') doCheck(); };
+  document.getElementById('adminPwCancel').onclick = ()=>{ location.href = location.pathname + '?u'; };
+  setTimeout(()=>input.focus(), 100);
+}
+
+let state = {
+  view: IS_ADMIN ? 'landing' : 'intro',
+  answers: {},
+  page: 0,
+  meta: {name:'', gender:'', spouse:'', job:'', birth:''},
+  settings: null,
+  responses: [],
+  lastResult: null,
+  couple: null,
+  coupleSelecting: false,
+  coupleSelected: [],
+};
+
+const PAGE_SIZE = 1;
+const TOTAL_PAGES = 81;
+
+function render(){ 
+  const app = document.getElementById('app');
+  const navRight = document.getElementById('navRight');
+  navRight.innerHTML = '';
+  // 관리자만 '처음으로' 이동 가능. 응답자는 검사 흐름에 갇혀야 함.
+  if(IS_ADMIN && state.view!=='landing'){
+    const back = document.createElement('span');
+    back.className='navlink'; back.textContent='← 처음으로';
+    back.onclick = async ()=>{
+      if(state.view==='survey') await saveDraft();
+      state.view='landing'; state.answers={}; state.page=0; state.meta={name:'',gender:'',spouse:'',job:'',birth:''}; render();
+    };
+    navRight.appendChild(back);
+  }
+
+  if(state.view==='intro') return renderIntro(app);
+  if(state.view==='landing') return renderLanding(app);
+  if(state.view==='survey') return renderSurvey(app);
+  if(state.view==='result') return renderResult(app);
+  if(state.view==='list') return renderList(app);
+  if(state.view==='couple') return renderCouple(app);
+}
+
+/* ---------- 랜딩(관리자 홈) ---------- */
+async function renderLanding(app){
+  state.settings = await getSettings();
+  // 공용 설정이 있으면 우선 적용 (다른 기기에서 바꾼 값 반영)
+  fbGetSettings().then(shared=>{
+    if(shared && typeof shared.showResultImmediately==='boolean' && shared.showResultImmediately!==state.settings.showResultImmediately){
+      state.settings.showResultImmediately = shared.showResultImmediately;
+      saveSettings(state.settings);
+    }
+  });
+  state.responses = await getResponses();
+  const draft = await getDraft();
+  const hasDraft = draftHasProgress(draft);
+
+  const resumeCard = hasDraft ? `
+    <div class="card" style="border-color:var(--ochre);background:#fbf6ec;">
+      <h3 style="color:var(--ochre);">작성하던 응답이 있어요</h3>
+      <p>${draft.meta && draft.meta.name ? `${esc(draft.meta.name)}님 · ` : ''}${Object.keys(draft.answers||{}).length}문항까지 작성됨. 이전에 작성한 문항부터 이어서 시작하시겠습니까?</p>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-primary" id="resumeBtn" style="flex:1;">이어서 하기</button>
+        <button class="btn-ghost" id="discardBtn" style="flex:1;">새로 시작</button>
+      </div>
+    </div>
+  ` : '';
+
+  const shareLink = location.origin + location.pathname + '?u';
+
+  app.innerHTML = `
+    <div class="hero">
+      <div class="eyebrow">Korean Enneagram Personality Type Indicator · 관리자</div>
+      <h1 class="serif">에니어그램 성격유형검사</h1>
+      <p>81문항 · 9가지 성격유형 자동 채점. 고객에게 링크를 보내거나, 폰을 건네 직접 응답받으세요.</p>
+    </div>
+
+    <div class="card">
+      <h3>고객에게 보낼 링크</h3>
+      <p>이 링크로 들어온 고객에게는 검사 화면만 보이고, 목록·설정은 보이지 않습니다.</p>
+      <div class="link-box">
+        <input type="text" readonly value="${shareLink}" id="linkInput">
+        <button class="btn-ghost" id="copyBtn" style="white-space:nowrap;">복사</button>
+      </div>
+    </div>
+
+    ${resumeCard}
+
+    <div class="card">
+      <h3>직접 진행</h3>
+      <p>고객에게 이 폰을 건네 바로 81문항에 답하게 할 수 있습니다.</p>
+      <button class="btn-primary btn-block" id="manualBtn">검사 시작하기 →</button>
+    </div>
+
+    <div class="card">
+      <h3>응답 목록</h3>
+      <p>이 폰에 저장된 응답 ${state.responses.length}건</p>
+      <button class="btn-ghost btn-block" id="listBtn">목록 보기 →</button>
+    </div>
+
+    <div class="card">
+      <h3>설정</h3>
+      <p style="color:var(--muted);font-size:13px;">응답자는 제출 후 결과를 볼 수 없으며, 관리자가 응답 목록에서 결과를 확인합니다. 응답은 클라우드에 자동 저장되어 모든 기기에서 볼 수 있습니다.</p>
+      <div style="padding:10px 12px;background:#f0f5f0;border-radius:6px;border-left:3px solid #2a7d4f;margin-bottom:10px;">
+        <div style="font-size:13px;font-weight:600;color:#2a7d4f;">🔒 비밀번호 보호 작동 중</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px;">이 기기는 인증되어 자동 로그인됩니다. 다른 기기에서 관리자 링크로 접속하면 비밀번호를 물어봅니다.</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-ghost" id="pwTestBtn" style="flex:1;">🔑 비밀번호 확인 테스트</button>
+        <button class="btn-ghost" id="adminLockBtn" style="flex:1;">로그아웃</button>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:11.5px;color:var(--muted);">
+        버전 <b>v10</b> · 2026.07.22
+      </div>
+    </div>
+  `;
+
+  const copyBtn = document.getElementById('copyBtn');
+  if(copyBtn){
+    copyBtn.onclick = ()=>{
+      const el = document.getElementById('linkInput');
+      el.select(); el.setSelectionRange(0, 99999);
+      try{ document.execCommand('copy'); }catch(e){}
+      if(navigator.clipboard){ navigator.clipboard.writeText(el.value).catch(()=>{}); }
+      copyBtn.textContent='복사됨'; setTimeout(()=>copyBtn.textContent='복사',1200);
+    };
+  }
+
+  if(hasDraft){
+    document.getElementById('resumeBtn').onclick = ()=>{
+      state.answers = draft.answers || {};
+      state.meta = draft.meta || {name:'',gender:'',spouse:'',job:'',birth:''};
+      state.page = Math.min(draft.page || 0, TOTAL_PAGES);
+      state.view = 'survey';
+      render();
+    };
+    document.getElementById('discardBtn').onclick = async ()=>{
+      if(confirm('작성하던 응답을 지우고 새로 시작할까요?')){
+        await clearDraft();
+        renderLanding(app);
+      }
+    };
+  }
+
+  document.getElementById('manualBtn').onclick = async ()=>{
+    if(hasDraft){ await clearDraft(); }
+    state.view='survey'; state.answers={}; state.page=0; state.meta={name:'',gender:'',spouse:'',job:'',birth:''}; render(); window.scrollTo(0,0);
+  };
+  document.getElementById('listBtn').onclick = ()=>{ state._listSynced=false; state.view='list'; render(); };
+  const lockBtn = document.getElementById('adminLockBtn');
+  if(lockBtn) lockBtn.onclick = ()=>{
+    if(confirm('이 기기에서 로그아웃할까요? 다시 들어오려면 비밀번호가 필요합니다.')){
+      try{ localStorage.removeItem('kepti_admin_auth'); }catch(e){}
+      location.href = location.pathname + '?u'; // 응답자 모드로 이동
+    }
+  };
+  const pwTest = document.getElementById('pwTestBtn');
+  if(pwTest) pwTest.onclick = async ()=>{
+    const pw = prompt('현재 관리자 비밀번호를 입력해보세요 (테스트용 — 로그아웃되지 않습니다)');
+    if(pw===null) return;
+    const h = await sha256Hex(pw);
+    if(h === ADMIN_PASSWORD_HASH){
+      alert('✅ 비밀번호가 정상 작동합니다.\n다른 기기에서 관리자 링크로 접속하면 이 비밀번호를 물어봅니다.');
+    } else {
+      alert('❌ 입력한 비밀번호가 현재 설정된 비밀번호와 다릅니다.');
+    }
+  };
+}
+
+/* ---------- 설문 ---------- */
+/* ---------- 생년월일 스크롤 피커 ---------- */
+const ITEM_H = 44;
+function _pickerData(){
+  const now = new Date().getFullYear();
+  const years=[]; for(let y=now; y>=1930; y--) years.push(y);
+  const months=[]; for(let m=1;m<=12;m++) months.push(m);
+  const days=[]; for(let d=1;d<=31;d++) days.push(d);
+  return {years, months, days};
+}
+
+function setupBirthPicker(){
+  const picker = document.getElementById('birthPicker');
+  if(!picker) return;
+  const {years, months, days} = _pickerData();
+  const lists = {year:years, month:months, day:days};
+  // 기존 저장값 or 기본값(2000.1.1)
+  let cur = {year:2000, month:1, day:1};
+  if(state.meta.birth){
+    const p = state.meta.birth.split('-');
+    if(p.length===3){ cur = {year:+p[0], month:+p[1], day:+p[2]}; }
+  }
+  picker.querySelectorAll('.picker-scroll').forEach(scroll=>{
+    const unit = scroll.dataset.unit;
+    const arr = lists[unit];
+    scroll.innerHTML = `<div class="picker-pad"></div>` +
+      arr.map(v=>`<div class="picker-item" data-v="${v}">${v}</div>`).join('') +
+      `<div class="picker-pad"></div>`;
+    // 초기 위치로 스크롤
+    const idx = arr.indexOf(cur[unit]);
+    requestAnimationFrame(()=>{ scroll.scrollTop = Math.max(0,idx) * ITEM_H; updateSel(scroll); });
+    let t;
+    scroll.addEventListener('scroll', ()=>{
+      updateSel(scroll);
+      clearTimeout(t);
+      t = setTimeout(()=>{
+        const i = Math.round(scroll.scrollTop / ITEM_H);
+        scroll.scrollTo({top:i*ITEM_H, behavior:'smooth'});
+        saveDraftBirth();
+      }, 120);
+    });
+  });
+}
+function updateSel(scroll){
+  const i = Math.round(scroll.scrollTop / ITEM_H);
+  scroll.querySelectorAll('.picker-item').forEach((el,idx)=>{
+    el.classList.toggle('sel', idx===i);
+  });
+}
+function readBirthPicker(){
+  const picker = document.getElementById('birthPicker');
+  if(!picker) return state.meta.birth || '';
+  const {years, months, days} = _pickerData();
+  const lists = {year:years, month:months, day:days};
+  const val = {};
+  picker.querySelectorAll('.picker-scroll').forEach(scroll=>{
+    const arr = lists[scroll.dataset.unit];
+    const i = Math.round(scroll.scrollTop / ITEM_H);
+    val[scroll.dataset.unit] = arr[Math.max(0,Math.min(arr.length-1,i))];
+  });
+  return `${val.year}-${String(val.month).padStart(2,'0')}-${String(val.day).padStart(2,'0')}`;
+}
+function saveDraftBirth(){
+  state.meta.birth = readBirthPicker();
+  saveDraft();
+}
+function birthToAge(birth){
+  if(!birth) return '';
+  const p = birth.split('-'); if(p.length<1) return '';
+  const by = +p[0]; if(!by) return '';
+  const age = (new Date().getFullYear() - by + 1); // 한국식 나이(대략)
+  if(age < 0 || age > 120) return ''; // 이상값 방어
+  return age;
+}
+// 만나이 계산 (생일 지났는지 반영)
+function birthToIntlAge(birth){
+  if(!birth) return '';
+  const p = birth.split('-');
+  const y = +p[0], m = +(p[1]||1), d = +(p[2]||1);
+  if(!y) return '';
+  const now = new Date();
+  let age = now.getFullYear() - y;
+  const mm = now.getMonth()+1, dd = now.getDate();
+  if(mm < m || (mm===m && dd < d)) age--; // 아직 올해 생일 안 지남
+  if(age < 0 || age > 120) return ''; // 이상값 방어
+  return age;
+}
+
+/* ---------- 응답자 시작 화면 ---------- */
+function renderIntro(app){
+  const typeGrid = [
+    {id:1,label:'올곧은 완벽주의자'},{id:2,label:'자상한 사랑주의자'},{id:3,label:'효율적 성공주의자'},
+    {id:4,label:'특별한 통찰주의자'},{id:5,label:'현명한 관찰주의자'},{id:6,label:'충성하는 안전주의자'},
+    {id:7,label:'다재다능한 낙천주의자'},{id:8,label:'강한 도전주의자'},{id:9,label:'화합하는 평화주의자'},
+  ].map(t=>`
+    <div class="type-card">
+      <div class="type-num" style="background:${typeColor(t.id)};">${t.id}</div>
+      <div class="type-lab">${t.label}</div>
+    </div>`).join('');
+
+  app.innerHTML = `
+    <div class="intro-cover">
+      <div class="intro-brand serif">AROM.D</div>
+      <div class="intro-en">Enneagram for the Couples</div>
+      <h1 class="intro-title serif">커플 에니어그램</h1>
+      <div class="intro-sub">9개 유형에 따른 커플 분석</div>
+    </div>
+
+    <div class="card">
+      <h3>📝 애니어그램 테스트 안내</h3>
+      <p style="line-height:1.8;margin-bottom:0;">
+        이 테스트는 심리 상태를 진단하거나 능력을 평가하는 검사가 아닙니다.
+        자신의 애니어그램 성격 유형을 이해하는 데 도움을 주기 위한 설문입니다.<br><br>
+        성격 유형에는 좋고 나쁨이 없으며, 정답도 없습니다.
+        어떻게 보여야 할지 고민하기보다 평소 자신의 모습과 가장 가까운 답을 선택해 주세요.<br><br>
+        생각을 많이 하기보다는 평소 습관이나 자연스러운 행동을 떠올리며 편안한 마음으로 응답해 주시면 더욱 정확한 결과를 얻을 수 있습니다.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>에니어그램 · 인간의 다양한 성격 9가지</h3>
+      <div class="type-grid">${typeGrid}</div>
+    </div>
+
+    <button class="btn-primary btn-block" id="introStartBtn" style="padding:15px;font-size:16px;">검사 시작하기 →</button>
+  `;
+  document.getElementById('introStartBtn').onclick = ()=>{
+    state.answers = {}; state.page = 0; state.meta = {name:'',gender:'',spouse:'',job:'',birth:''};
+    clearDraft();
+    state.view = 'survey';
+    render(); window.scrollTo(0,0);
+  };
+}
+
+function renderSurvey(app){
+  // 안전장치: 페이지가 81을 넘지 않도록 제한 (undefined 문항 방지)
+  if(state.page > TOTAL_PAGES) state.page = TOTAL_PAGES;
+  const page = state.page;
+  const isMetaPage = page === 0;
+  const qStart = (page-1)*PAGE_SIZE;
+
+  let progressPct = Math.round((page/(TOTAL_PAGES+1))*100);
+
+  let body = '';
+  if(isMetaPage){
+    body = `
+      <div class="card">
+        <h3>응답자 정보 입력</h3>
+        <p>정답이 없는 검사입니다. 평소 습관처럼 편안하게 답해주세요.</p>
+        <div class="field">
+          <label class="field-label">이름 *</label>
+          <input type="text" id="metaName" value="${state.meta.name}">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label class="field-label">성별</label>
+            <select id="metaGender">
+              <option value="">선택 안함</option>
+              <option value="남" ${state.meta.gender==='남'?'selected':''}>남</option>
+              <option value="여" ${state.meta.gender==='여'?'selected':''}>여</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label">배우자 이름</label>
+            <input type="text" id="metaSpouse" value="${esc(state.meta.spouse||'')}" placeholder="예: 홍길동">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">직업 / 세부직무</label>
+          <input type="text" id="metaJob" value="${esc(state.meta.job||'')}" placeholder="예: 회사원(마케팅), 간호사(산부인과)">
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5;">직업 적합도 분석에 활용되므로, 현재 담당 업무까지 구체적으로 작성해주세요.<br>예) 회사원(마케팅) / 간호사(산부인과)</div>
+        </div>
+        <div class="field">
+          <label class="field-label">생년월일 (위아래로 밀어서 선택)</label>
+          <div class="picker" id="birthPicker">
+            <div class="picker-col"><div class="picker-highlight"></div><div class="picker-scroll" data-unit="year"></div></div>
+            <div class="picker-col"><div class="picker-highlight"></div><div class="picker-scroll" data-unit="month"></div></div>
+            <div class="picker-col"><div class="picker-highlight"></div><div class="picker-scroll" data-unit="day"></div></div>
+          </div>
+          <div class="picker-labels"><span>년</span><span>월</span><span>일</span></div>
+        </div>
+      </div>
+    `;
+  } else {
+    const qn = page; // page 1..81 = 문항 번호
+    const val = state.answers[qn] || 0;
+    const SCALE_LABELS = {1:'전혀 그렇지 않다', 2:'대체로 그렇지 않다', 3:'보통이다', 4:'대체로 그렇다', 5:'매우 그렇다'};
+    body = `
+      <div class="q-single">
+        <div class="qnum">Q${qn}</div>
+        <div class="q-big">${QUESTIONS[qn-1]}</div>
+        <div class="scale" data-q="${qn}">
+          ${[1,2,3,4,5].map(v=>`
+            <label class="${val==v?'checked':''}" data-v="${v}">
+              <input type="radio" name="q${qn}" value="${v}" ${val==v?'checked':''}>
+              <span class="lab">${SCALE_LABELS[v]}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>`;
+  }
+
+  app.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" style="width:${progressPct}%"></div></div>
+      <div class="progress-label">${isMetaPage? '기본 정보' : `문항 ${page} / 81`}</div>
+    </div>
+    ${body}
+    <div class="stepnav">
+      ${page>0 ? `<button class="btn-ghost" id="prevBtn">이전</button>` : `<span></span>`}
+      ${isMetaPage
+        ? `<button class="btn-primary" id="nextBtn">다음</button>`
+        : (page===TOTAL_PAGES ? `<button class="btn-primary" id="nextBtn">제출하기</button>` : `<span></span>`)}
+    </div>
+  `;
+
+  if(!isMetaPage){
+    let _advancing = false; // 이 화면에서 자동 넘김 중복 방지
+    app.querySelectorAll('.scale label').forEach(lab=>{
+      lab.addEventListener('click', ()=>{
+        if(_advancing) return;
+        const sc = lab.closest('.scale');
+        const v = lab.dataset.v;
+        state.answers[sc.dataset.q] = v;
+        sc.querySelectorAll('label').forEach(l=>l.classList.remove('checked'));
+        lab.classList.add('checked');
+        saveDraft();
+        if(page < TOTAL_PAGES){
+          _advancing = true;
+          // 다음 문항으로 자동 넘김
+          setTimeout(()=>{ state.page = Math.min(page+1, TOTAL_PAGES); saveDraft(); window.scrollTo(0,0); render(); }, 180);
+        }
+        // 마지막 문항은 자동 제출하지 않고 "제출하기" 버튼으로 제출
+      });
+    });
+  } else {
+    setupBirthPicker();
+  }
+
+  if(page>0) document.getElementById('prevBtn').onclick = ()=>{ state.page--; saveDraft(); window.scrollTo(0,0); render(); };
+  const nextBtn = document.getElementById('nextBtn');
+  if(nextBtn) nextBtn.onclick = async ()=>{
+    if(isMetaPage){
+      const nm = document.getElementById('metaName').value.trim();
+      if(!nm){ alert('이름을 입력해주세요.'); return; }
+      state.meta.name = nm;
+      state.meta.gender = document.getElementById('metaGender').value;
+      const spouseEl = document.getElementById('metaSpouse');
+      state.meta.spouse = spouseEl ? spouseEl.value.trim() : '';
+      state.meta.job = document.getElementById('metaJob').value.trim();
+      state.meta.birth = readBirthPicker();
+      state.page++; await saveDraft(); window.scrollTo(0,0); render(); return;
+    }
+    // 마지막 문항 제출
+    if(!state.answers[page]){ alert('답을 선택해주세요.'); return; }
+    // 전체 문항 검증 — 빠진 문항이 있으면 그 문항으로 이동
+    for(let q=1; q<=81; q++){
+      if(!state.answers[q]){
+        alert(`${q}번 문항에 응답하지 않았어요. 해당 문항으로 이동합니다.`);
+        state.page = q; render(); window.scrollTo(0,0); return;
+      }
+    }
+    await submitSurvey();
+  };
+}
+
+async function sendResultEmail(record){
+  if(!WEB3FORMS_KEY || WEB3FORMS_KEY.indexOf('여기에')>-1) return false;
+  const ranked = TYPES.map(t=>({...t, score:record.scores[t.id]})).sort((a,b)=>b.score-a.score);
+  const top = ranked[0];
+  const w = calcWing(record.scores);
+  const d = new Date(record.date);
+  const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  const rankText = ranked.map((t,i)=>`${i+1}위. ${t.id}번 ${t.name}(${t.sub}) — ${t.score}/45`).join('\n');
+  const body =
+    `■ 에니어그램 검사 결과\n\n`+
+    `이름: ${record.name}\n`+
+    `성별: ${record.gender||'-'}\n`+
+    `직업: ${record.job||'-'}\n`+
+    `생년월일: ${record.birth||'-'}${record.birth?` (만 ${birthToAge(record.birth)-1}세 전후)`:''}\n`+
+    `검사일시: ${dateStr}\n\n`+
+    `▶ 대표 유형: ${w.label} ${w.wingName||''} (${top.id}번 ${top.name})\n`+
+    `${top.desc}\n\n`+
+    `▶ 전체 순위\n${rankText}\n`;
+  try{
+    const res = await fetch('https://api.web3forms.com/submit', {
+      method:'POST',
+      headers:{'Content-Type':'application/json', 'Accept':'application/json'},
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: `[에니어그램] ${record.name}님 · ${w.label} ${top.name}`,
+        from_name: '에니어그램 자동채점',
+        name: record.name,
+        message: body
+      })
+    });
+    const ok = res && res.ok;
+    markEmailStatus(record.id, ok ? 'sent' : 'failed');
+    return ok;
+  }catch(e){
+    markEmailStatus(record.id, 'failed');
+    return false;
+  }
+}
+
+function markEmailStatus(recordId, status){
+  const list = getResponses();
+  const rec = list.find(r=>r.id===recordId);
+  if(rec){ rec.emailStatus = status; saveResponses(list); }
+  if(state.lastResult && state.lastResult.id===recordId){ state.lastResult.emailStatus = status; }
+}
+
+let _submitting = false;
+async function submitSurvey(){
+  if(_submitting) return; // 더블탭 중복 제출 방지
+  _submitting = true;
+  try{
+  const scores = {};
+  TYPES.forEach(t=>scores[t.id]=0);
+  for(let q=1; q<=81; q++){
+    const v = parseInt(state.answers[q]||0,10);
+    const tid = itemToType[q];
+    scores[tid] += v;
+  }
+  const record = {
+    id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
+    name: state.meta.name||'', gender: state.meta.gender||'', spouse: state.meta.spouse||'', relation: '', job: state.meta.job||'', birth: state.meta.birth||'',
+    date: new Date().toISOString(),
+    answers: state.answers,
+    scores,
+    emailStatus: 'pending',
+  };
+  const list = await getResponses();
+  list.push(record);
+  await saveResponses(list);      // 로컬 캐시에 저장 (오프라인 대비)
+  // 공용 저장소(Firebase)에 저장 → 실패하면 _pending 표시 후 다음 동기화 때 재시도
+  fbSaveResponse(record).then(ok=>{
+    if(!ok){
+      const all = getResponses();
+      const r = all.find(x=>x.id===record.id);
+      if(r){ r._pending = true; saveResponses(all); }
+    }
+  });
+  await clearDraft();
+  state.lastResult = record;
+
+  // 결과 이메일 자동 전송 (실패해도 로컬 저장/결과 표시는 정상 진행)
+  sendResultEmail(record);
+
+  // 항상 제출 완료 메시지만 표시 (결과 조회는 관리자만)
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="top-result-banner">
+      <div class="eyebrow">제출 완료</div>
+      <h2 class="serif">응답이 저장되었습니다</h2>
+      <p>${esc(state.meta.name)}님, 참여해주셔서 감사합니다. 결과는 담당자가 안내해드릴게요.</p>
+    </div>
+    ${IS_ADMIN ? `<div class="no-print" style="text-align:center;">
+      <span class="navlink" id="adminViewBtn">관리자용 결과 바로 보기</span>
+    </div>` : ''}
+  `;
+  window.scrollTo(0,0);
+    if(IS_ADMIN){
+      const b = document.getElementById('adminViewBtn');
+      if(b) b.onclick = ()=>{ state.view='result'; render(); };
+    }
+    return;
+  } finally {
+    setTimeout(()=>{ _submitting = false; }, 2000);
+  }
+}
+
+/* ---------- 결과 ---------- */
+function radarSVG(scores){
+  const VB=420, cx=VB/2, cy=VB/2, R=120, maxScore=45, n=9;
+  const ORDER = [9,1,2,3,4,5,6,7,8];
+  const angle = i => (Math.PI*2*i/n) - Math.PI/2;
+  const pt = (i,r) => [cx + r*Math.cos(angle(i)), cy + r*Math.sin(angle(i))];
+
+  let rings='';
+  [0.25,0.5,0.75,1].forEach(f=>{
+    let pts=[]; for(let i=0;i<n;i++){ const [x,y]=pt(i,R*f); pts.push(`${x},${y}`); }
+    rings += `<polygon points="${pts.join(' ')}" fill="none" stroke="#d9d0bd" stroke-width="1"/>`;
+  });
+
+  let spokes='', labels='';
+  for(let i=0;i<n;i++){
+    const [x,y]=pt(i,R);
+    spokes += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#d9d0bd" stroke-width="1"/>`;
+    const t = TYPES.find(v=>v.id===ORDER[i]);
+    const [lx,ly] = pt(i, R+34);
+    const c = Math.cos(angle(i));
+    let anchor = 'middle';
+    if(c > 0.3) anchor='start'; else if(c < -0.3) anchor='end';
+    labels += `<text x="${lx}" y="${ly-6}" font-size="15" font-weight="700" text-anchor="${anchor}" fill="#232946" font-family="'Noto Sans KR',sans-serif">${ORDER[i]}</text>`;
+    labels += `<text x="${lx}" y="${ly+11}" font-size="12" font-weight="500" text-anchor="${anchor}" fill="#5a5550" font-family="'Noto Sans KR',sans-serif">${t.name}</text>`;
+  }
+
+  let dp=[]; for(let i=0;i<n;i++){ dp.push(pt(i, ((scores[ORDER[i]]||0)/maxScore)*R)); }
+  const poly = dp.map(p=>p.join(',')).join(' ');
+  const dots = dp.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${typeColor(ORDER[i])}"/>`).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${VB}" height="${VB}" viewBox="0 0 ${VB} ${VB}"><rect width="${VB}" height="${VB}" fill="#f6f2ea"/>${rings}${spokes}<polygon points="${poly}" fill="rgba(35,41,70,0.18)" stroke="#232946" stroke-width="2"/>${dots}${labels}</svg>`;
+}
+
+function buildPrintContent(rec){
+  const ranked = TYPES.map(t=>({...t, score:rec.scores[t.id]})).sort((a,b)=>b.score-a.score);
+  const top = ranked[0];
+  const d = new Date(rec.date);
+  const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  const rankRows = ranked.map(t=>`
+    <tr>
+      <td><span class="p-badge" style="background:${typeColor(t.id)};">${t.id}</span></td>
+      <td><b>${t.name}</b> <span style="color:#7a7266;">${t.sub}</span></td>
+      <td style="text-align:right;font-family:monospace;">${t.score}/45</td>
+    </tr>`).join('');
+  return `
+    <h1>에니어그램 성격유형검사 결과</h1>
+    <div class="p-sub">${dateStr}</div>
+    <div class="p-info">
+      이름: ${esc(rec.name)}<br>
+      성별: ${rec.gender||'-'} &nbsp;|&nbsp; 배우자: ${esc(rec.spouse||rec.relation)||'-'} &nbsp;|&nbsp; 직업: ${esc(rec.job)||'-'}<br>
+      생년월일: ${rec.birth||'-'}
+    </div>
+    <div class="p-banner">
+      <div class="p-t">${esc(rec.name)}님의 대표 유형</div>
+      <h2>${top.id}번 · ${top.name} (${top.sub})</h2>
+      <p>${top.desc}</p>
+    </div>
+    <div class="p-chart">${radarSVG(rec.scores)}</div>
+    <table>${rankRows}</table>
+    <div class="p-footer">
+      <div class="p-b">AROM.D</div>
+      <div class="p-c">커플 에니어그램 · 9개 유형에 따른 커플 분석<br>© AROM.D. 본 검사지 및 문항의 저작권은 AROM.D에 있으며, 무단 복제·배포를 금합니다.</div>
+    </div>`;
+}
+
+/* ========== 결과를 이미지(PNG)로 저장 ========== */
+// SVG 텍스트를 여러 줄로 자동 줄바꿈
+function wrapSvgText(text, maxChars){
+  const words = String(text).split(' ');
+  const lines = []; let cur = '';
+  const pushWord = (w)=>{
+    // 한 단어가 최대 글자수보다 길면 강제로 잘라 넣음
+    while(w.length > maxChars){
+      if(cur){ lines.push(cur); cur=''; }
+      lines.push(w.slice(0, maxChars));
+      w = w.slice(maxChars);
+    }
+    if((cur+' '+w).trim().length > maxChars){ if(cur) lines.push(cur); cur = w; }
+    else cur = (cur? cur+' ':'')+w;
+  };
+  words.forEach(pushWord);
+  if(cur) lines.push(cur);
+  return lines;
+}
+
+// SVG 문자열을 PNG로 변환해 저장/공유 (모바일 갤러리 저장 지원)
+function saveSvgAsImage(svgString, filename){
+  try{
+    const svgBlob = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onerror = function(){
+      URL.revokeObjectURL(url);
+      alert('이미지 생성에 실패했어요. 다시 시도하거나 화면을 캡처해 주세요.');
+    };
+    img.onload = function(){
+      const scale = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.scale(scale, scale);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(async function(blob){
+        if(!blob){ alert('이미지 생성에 실패했어요. 화면을 캡처해 주세요.'); return; }
+        const file = new File([blob], filename, {type:'image/png'});
+        // 1순위: 공유 시트(모바일에서 "이미지 저장"/"사진에 저장" 가능)
+        if(navigator.canShare && navigator.canShare({files:[file]})){
+          try{
+            await navigator.share({files:[file], title:'에니어그램 결과'});
+            return;
+          }catch(e){ /* 사용자가 취소하면 아래로 진행 안 함 */ 
+            if(e && e.name==='AbortError') return;
+          }
+        }
+        // 2순위: 새 탭에 이미지 열기 → 사용자가 길게 눌러 "이미지 저장"
+        const dataUrl = canvas.toDataURL('image/png');
+        const win = window.open();
+        if(win && win.document){
+          win.document.write('<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+filename+'</title></head><body style="margin:0;background:#111;text-align:center;"><p style="color:#fff;font-family:sans-serif;font-size:14px;padding:12px;">이미지를 길게 눌러 "이미지 저장"을 선택하세요</p><img src="'+dataUrl+'" style="max-width:100%;height:auto;"></body></html>');
+          win.document.close();
+        } else {
+          // 3순위: 다운로드 (팝업 차단 시)
+          const a = document.createElement('a');
+          a.href = dataUrl; a.download = filename;
+          document.body.appendChild(a); a.click();
+          setTimeout(()=>document.body.removeChild(a), 1000);
+        }
+      }, 'image/png');
+    };
+    img.onerror = function(){ URL.revokeObjectURL(url); alert('이미지 생성에 실패했어요. 화면을 캡처해 주세요.'); };
+    img.src = url;
+  }catch(e){ alert('이미지 생성에 실패했어요. 화면을 캡처해 주세요.'); }
+}
+
+// 개인 결과를 하나의 SVG로 구성
+function buildResultSVG(rec){
+  const ranked = TYPES.map(t=>({...t, score:rec.scores[t.id]})).sort((a,b)=>b.score-a.score);
+  const top = ranked[0];
+  const w = calcWing(rec.scores);
+  const k = coupleKeywords(rec);
+  const d = new Date(rec.date);
+  const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+  const age = birthToIntlAge(rec.birth);
+  const W = 760; let y = 0; const parts = [];
+  const topColor = typeColor(top.id);
+  const T=(x,yy,s,opt={})=>`<text x="${x}" y="${yy}" font-family="'Noto Sans KR',sans-serif" font-size="${opt.size||14}" fill="${opt.color||'#20242b'}" text-anchor="${opt.anchor||'start'}" font-weight="${opt.weight||400}">${esc(s)}</text>`;
+
+  // 제목
+  y=46; parts.push(T(40,y,'에니어그램 성격유형검사 결과',{size:24,weight:700,color:'#232946'}));
+  y+=26; parts.push(T(40,y,dateStr,{size:13,color:'#7a7266'}));
+  
+  // 배너 (동점이면 안내 한 줄 추가)
+  const isTie = ranked.length>1 && ranked[0].score === ranked[1].score;
+  const bannerH = isTie ? 116 : 96;
+  y+=20; parts.push(`<rect x="40" y="${y}" width="${W-80}" height="${bannerH}" rx="8" fill="#232946"/>`);
+  parts.push(T(W/2,y+30,`${esc(rec.name)}님의 대표 유형`,{size:12,color:'#e3b06a',anchor:'middle'}));
+  parts.push(T(W/2,y+58,`${w.label} · ${top.name}${w.wingName?` (${w.wingName})`:''}`,{size:22,weight:700,color:'#ffffff',anchor:'middle'}));
+  parts.push(T(W/2,y+82,top.tagline||'',{size:13,color:'#c7cadf',anchor:'middle'}));
+  if(isTie){
+    parts.push(T(W/2,y+104,`※ ${ranked[0].id}번과 ${ranked[1].id}번이 동점입니다. 두 유형을 함께 살펴보세요.`,{size:11,color:'#e3b06a',anchor:'middle'}));
+  }
+  y+=bannerH+20;
+  
+  // 정보
+  const info = [rec.gender, (rec.spouse?'배우자 '+rec.spouse:rec.relation), age!==''?`만 ${age}세`:'', rec.job].filter(Boolean).join('  ·  ');
+  parts.push(T(40,y,`${esc(rec.name)}   ${esc(info)}`,{size:13,color:'#444'})); y+=30;
+  
+  // 레이더 차트
+  const chart = radarSVG(rec.scores).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+  parts.push(`<g transform="translate(${(W-420)/2}, ${y})">${chart}</g>`); y+=440;
+  
+  // 점수 프로파일
+  const lineChart = profileLineSVG([{scores:rec.scores, color:'#1f4fd8'}]).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+  parts.push(T(40,y,'유형별 점수 프로파일',{size:15,weight:700,color:'#232946'})); y+=14;
+  parts.push(`<g transform="translate(${(W-740)/2}, ${y})">${lineChart}</g>`); y+=570;
+  
+  // 대표유형 상세
+  y+=14;
+  parts.push(`<rect x="40" y="${y}" width="${W-80}" height="4" rx="2" fill="${topColor}"/>`);
+  y+=16; parts.push(T(40,y,'대표 유형 상세',{size:15,weight:700,color:'#232946'})); y+=18;
+  
+  // 특징
+  parts.push(T(40,y,'특징',{size:11,weight:700,color:'#7a7266',anchor:'start'})); y+=14;
+  wrapSvgText(k.desc, 60).forEach(ln=>{ parts.push(T(40,y,ln,{size:12,color:'#444'})); y+=16; });
+  y+=4;
+  
+  // 강점/약점 2단 (테두리 박스로 구분, 전체 텍스트 표시)
+  const colW = (W-80)/2 - 8;       // 각 박스 폭
+  const boxPadX = 12, boxPadTop = 30, boxPadBot = 12;
+  const charPerLine = Math.floor((colW - boxPadX*2) / 11.5); // 폰트11 기준 한 줄 글자수
+  const sLines = wrapSvgText(k.strength, charPerLine);
+  const wLines = wrapSvgText(k.weakness, charPerLine);
+  const maxLines = Math.max(sLines.length, wLines.length);
+  const boxH = boxPadTop + maxLines*15 + boxPadBot;
+  const leftX = 40;
+  const rightX2 = 40 + colW + 16;
+
+  // 강점 박스
+  parts.push(`<rect x="${leftX}" y="${y}" width="${colW}" height="${boxH}" rx="8" fill="#f0f5f0" stroke="#2a7d4f" stroke-width="1.5"/>`);
+  parts.push(T(leftX+boxPadX, y+20, '✓ 강점', {size:12,weight:700,color:'#2a7d4f'}));
+  let sy = y + boxPadTop + 6;
+  sLines.forEach(ln=>{ parts.push(T(leftX+boxPadX, sy, ln, {size:11,color:'#333'})); sy+=15; });
+
+  // 약점 박스
+  parts.push(`<rect x="${rightX2}" y="${y}" width="${colW}" height="${boxH}" rx="8" fill="#faf0f0" stroke="#b5462f" stroke-width="1.5"/>`);
+  parts.push(T(rightX2+boxPadX, y+20, '✗ 약점', {size:12,weight:700,color:'#b5462f'}));
+  let wy = y + boxPadTop + 6;
+  wLines.forEach(ln=>{ parts.push(T(rightX2+boxPadX, wy, ln, {size:11,color:'#333'})); wy+=15; });
+
+  y = y + boxH + 12;
+  
+  // 날개
+  y+=6;
+  parts.push(T(40,y,'날개',{size:11,weight:700,color:'#7a7266',anchor:'start'})); y+=14;
+  wrapSvgText(k.wingDesc, 60).forEach(ln=>{ parts.push(T(40,y,ln,{size:12,color:'#444'})); y+=16; });
+  y+=2;
+  
+  // 성장전략
+  y+=6;
+  parts.push(T(40,y,'성장 전략',{size:11,weight:700,color:'#7a7266',anchor:'start'})); y+=14;
+  wrapSvgText(k.growth, 60).forEach(ln=>{ parts.push(T(40,y,ln,{size:12,color:'#444'})); y+=16; });
+  y+=2;
+  
+  // 변화방향 (박스 2칸으로 구분, 쉬운 설명)
+  y+=6;
+  parts.push(T(40,y,'변화 방향',{size:11,weight:700,color:'#7a7266',anchor:'start'})); y+=10;
+  const dirColW = (W-80)/2 - 8;
+  const dirRightX = 40 + dirColW + 16;
+  const dirChars = Math.floor((dirColW - 24) / 11.5);
+  const gLines = wrapSvgText(k.growthDesc || `${k.growthType.id}번 ${k.growthType.name}의 강점 발현`, dirChars);
+  const stLines = wrapSvgText(k.stressDesc || `${k.stressType.id}번 ${k.stressType.name}의 약점 발현`, dirChars);
+  const dirMaxLines = Math.max(gLines.length, stLines.length);
+  const dirBoxH = 30 + dirMaxLines*15 + 10;
+  // 안정 박스
+  parts.push(`<rect x="40" y="${y}" width="${dirColW}" height="${dirBoxH}" rx="8" fill="#f0f5f0" stroke="#2a7d4f" stroke-width="1.5"/>`);
+  parts.push(T(52, y+20, '😊 안정될 때', {size:11,weight:700,color:'#2a7d4f'}));
+  let gy = y+38;
+  gLines.forEach(ln=>{ parts.push(T(52, gy, ln, {size:11,color:'#333'})); gy+=15; });
+  // 스트레스 박스
+  parts.push(`<rect x="${dirRightX}" y="${y}" width="${dirColW}" height="${dirBoxH}" rx="8" fill="#faf0f0" stroke="#b5462f" stroke-width="1.5"/>`);
+  parts.push(T(dirRightX+12, y+20, '😰 스트레스 받을 때', {size:11,weight:700,color:'#b5462f'}));
+  let sty = y+38;
+  stLines.forEach(ln=>{ parts.push(T(dirRightX+12, sty, ln, {size:11,color:'#333'})); sty+=15; });
+  y += dirBoxH + 8;
+  
+  // 추천직업
+  y+=6;
+  parts.push(T(40,y,'추천 직업',{size:11,weight:700,color:'#7a7266',anchor:'start'})); y+=14;
+  wrapSvgText(k.jobs, 60).forEach(ln=>{ parts.push(T(40,y,ln,{size:12,color:'#444'})); y+=16; });
+  y+=2;
+  
+  // 좌우명
+  y+=8; parts.push(`<rect x="40" y="${y}" width="${W-80}" height="40" rx="6" fill="rgba(185,129,47,0.1)" stroke="rgba(185,129,47,0.3)" stroke-width="1"/>`);
+  parts.push(T(W/2,y+12,'좌우명',{size:11,weight:700,color:'#b9812f',anchor:'middle'}));
+  parts.push(T(W/2,y+28,`"${k.motto}"`,{size:12,weight:600,color:'#b9812f',anchor:'middle'}));
+  y+=44;
+  
+  // 유형별 순위 (3열 그리드)
+  y+=16;
+  parts.push(T(40,y,'유형별 순위',{size:15,weight:700,color:'#232946'})); y+=20;
+  const cardW = (W-80-16)/3;
+  const cardH = 90;
+  ranked.forEach((t,i)=>{
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+    const cx = 40 + col * (cardW + 8);
+    const cy = y + row * (cardH + 8);
+    parts.push(`<rect x="${cx}" y="${cy}" width="${cardW}" height="${cardH}" rx="6" fill="#fafaf7" stroke="#e5dcc9" stroke-width="1"/>`);
+    // 번호
+    parts.push(`<circle cx="${cx + cardW/2}" cy="${cy + 14}" r="14" fill="${typeColor(t.id)}"/>`);
+    parts.push(T(cx + cardW/2,cy + 18,String(t.id),{size:14,weight:700,color:'#fff',anchor:'middle'}));
+    // 이름
+    parts.push(T(cx + cardW/2,cy + 42,t.name,{size:12,weight:700,color:'#232946',anchor:'middle'}));
+    // 부제
+    parts.push(T(cx + cardW/2,cy + 56,t.sub,{size:10,color:'#7a7266',anchor:'middle'}));
+    // 점수
+    parts.push(T(cx + cardW/2,cy + 72,`${t.score}/45`,{size:13,weight:700,color:'#232946',anchor:'middle'}));
+  });
+  y = y + Math.ceil(ranked.length/3) * (cardH + 8) + 12;
+  
+  // 푸터
+  y+=12;
+  parts.push(`<line x1="40" y1="${y}" x2="${W-40}" y2="${y}" stroke="#ddd" stroke-width="1"/>`); y+=20;
+  parts.push(T(W/2,y,'AROM.D',{size:16,weight:700,color:'#232946',anchor:'middle'})); y+=18;
+  parts.push(T(W/2,y,'커플 에니어그램 · 9개 유형에 따른 커플 분석',{size:11,color:'#7a7266',anchor:'middle'})); y+=14;
+  parts.push(T(W/2,y,'© AROM.D. 본 검사지의 저작권은 AROM.D에 있으며, 무단 복제·배포를 금합니다.',{size:10,color:'#999',anchor:'middle'})); y+=28;
+
+  const H = y;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#f6f2ea"/>${parts.join('')}</svg>`;
+}
+
+// 커플 결과를 하나의 SVG로 구성
+function buildCoupleSVG(){
+  const c = state.couple; const a=c.a, b=c.b;
+  const ka = coupleKeywords(a), kb = coupleKeywords(b);
+  const dd=new Date(); const dateStr=`${dd.getFullYear()}년 ${dd.getMonth()+1}월 ${dd.getDate()}일`;
+  const W=760; let y=0; const parts=[];
+  const T=(x,yy,s,opt={})=>`<text x="${x}" y="${yy}" font-family="'Noto Sans KR',sans-serif" font-size="${opt.size||14}" fill="${opt.color||'#20242b'}" text-anchor="${opt.anchor||'start'}" font-weight="${opt.weight||400}">${esc(s)}</text>`;
+
+  y=46; parts.push(T(40,y,'커플 에니어그램 프로파일',{size:24,weight:700,color:'#232946'}));
+  y+=24; parts.push(T(40,y,`AROM:D · 부부심리상담사 · ${dateStr}`,{size:12,color:'#7a7266'}));
+  // 배너
+  y+=18; parts.push(`<rect x="40" y="${y}" width="${W-80}" height="76" rx="8" fill="#232946"/>`);
+  parts.push(T(W/2,y+32,`${esc(a.name)}  ♥  ${esc(b.name)}`,{size:22,weight:700,color:'#fff',anchor:'middle'}));
+  parts.push(T(W/2,y+56,`${ka.label}  ♥  ${kb.label}`,{size:13,color:'#c7cadf',anchor:'middle'}));
+  y+=90;
+
+  // 유형 배지 2단 (파랑=A, 빨강=B): 유형명 + 핵심 키워드
+  const bColW = (W-80-12)/2;
+  const bRightX = 40 + bColW + 12;
+  const bChars = Math.floor((bColW-24)/10.5);
+  const kaTitle = `${ka.label.split(' ')[0]} ${ka.main.name}${ka.wingNick?` · ${ka.wingNick}`:''}`;
+  const kbTitle = `${kb.label.split(' ')[0]} ${kb.main.name}${kb.wingNick?` · ${kb.wingNick}`:''}`;
+  const kaKw = wrapSvgText(ka.keywords, bChars);
+  const kbKw = wrapSvgText(kb.keywords, bChars);
+  const bMax = Math.max(kaKw.length, kbKw.length);
+  const bH = 52 + bMax*14 + 10;
+  // A 배지 (파랑)
+  parts.push(`<rect x="40" y="${y}" width="${bColW}" height="${bH}" rx="10" fill="#1f4fd8"/>`);
+  parts.push(T(40+bColW/2, y+20, a.name, {size:11,color:'#c9d6ff',anchor:'middle'}));
+  parts.push(T(40+bColW/2, y+40, kaTitle, {size:14,weight:700,color:'#ffffff',anchor:'middle'}));
+  let kay = y+58; kaKw.forEach(ln=>{ parts.push(T(40+bColW/2, kay, ln, {size:10.5,color:'#e6ecff',anchor:'middle'})); kay+=14; });
+  // B 배지 (빨강)
+  parts.push(`<rect x="${bRightX}" y="${y}" width="${bColW}" height="${bH}" rx="10" fill="#e01e37"/>`);
+  parts.push(T(bRightX+bColW/2, y+20, b.name, {size:11,color:'#ffd6dc',anchor:'middle'}));
+  parts.push(T(bRightX+bColW/2, y+40, kbTitle, {size:14,weight:700,color:'#ffffff',anchor:'middle'}));
+  let kby = y+58; kbKw.forEach(ln=>{ parts.push(T(bRightX+bColW/2, kby, ln, {size:10.5,color:'#ffe6ea',anchor:'middle'})); kby+=14; });
+  y += bH + 18;
+
+  // 범례
+  parts.push(`<rect x="40" y="${y-10}" width="12" height="12" fill="#1f4fd8" rx="2"/>`);
+  parts.push(T(58,y,esc(a.name),{size:12.5}));
+  parts.push(`<rect x="150" y="${y-10}" width="12" height="12" fill="#e01e37" rx="2"/>`);
+  parts.push(T(168,y,esc(b.name),{size:12.5}));
+  y+=14;
+  // 차트
+  const chartInner = coupleLineSVG(a.scores,b.scores).replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'');
+  // coupleLineSVG viewBox 720x560 → 스케일 맞춰 삽입
+  parts.push(`<g transform="translate(${(W-740)/2}, ${y})">${chartInner}</g>`); y+=575;
+  // 개인 요약 2단 (결과지와 동일 수준: 특징 전체 + 강점/약점 박스 + 변화방향 박스 + 좌우명)
+  function summaryBlock(x, k, name, color){
+    let yy=y; const lines=[]; const colW=(W-100)/2;
+    const charW = Math.floor((colW-4) / 11.5);
+    lines.push(`<rect x="${x}" y="${yy}" width="${colW}" height="4" rx="2" fill="${color}"/>`); yy+=22;
+    lines.push(T(x,yy,`${name} · ${k.label}`,{size:14,weight:700,color})); yy+=22;
+
+    // 특징 (전체)
+    lines.push(T(x,yy,'특징',{size:10.5,weight:700,color:'#7a7266'})); yy+=14;
+    wrapSvgText(k.desc, charW).forEach(ln=>{ lines.push(T(x,yy,ln,{size:10.5,color:'#444'})); yy+=14; });
+    yy+=6;
+
+    // 강점 박스
+    const sLines = wrapSvgText(k.strength, charW-2);
+    const sH = 26 + sLines.length*13 + 8;
+    lines.push(`<rect x="${x}" y="${yy}" width="${colW}" height="${sH}" rx="6" fill="#f0f5f0" stroke="#2a7d4f" stroke-width="1.2"/>`);
+    lines.push(T(x+10,yy+17,'✓ 강점',{size:10.5,weight:700,color:'#2a7d4f'}));
+    let sy=yy+30; sLines.forEach(ln=>{ lines.push(T(x+10,sy,ln,{size:10.5,color:'#333'})); sy+=13; });
+    yy += sH + 8;
+
+    // 약점 박스
+    const wLines = wrapSvgText(k.weakness, charW-2);
+    const wH = 26 + wLines.length*13 + 8;
+    lines.push(`<rect x="${x}" y="${yy}" width="${colW}" height="${wH}" rx="6" fill="#faf0f0" stroke="#b5462f" stroke-width="1.2"/>`);
+    lines.push(T(x+10,yy+17,'✗ 약점',{size:10.5,weight:700,color:'#b5462f'}));
+    let wy=yy+30; wLines.forEach(ln=>{ lines.push(T(x+10,wy,ln,{size:10.5,color:'#333'})); wy+=13; });
+    yy += wH + 8;
+
+    // 변화방향 안정 박스
+    const gLines = wrapSvgText(k.growthDesc||'', charW-2);
+    const gH = 26 + gLines.length*13 + 8;
+    lines.push(`<rect x="${x}" y="${yy}" width="${colW}" height="${gH}" rx="6" fill="#f0f5f0" stroke="#2a7d4f" stroke-width="1.2"/>`);
+    lines.push(T(x+10,yy+17,'😊 안정될 때',{size:10.5,weight:700,color:'#2a7d4f'}));
+    let gy=yy+30; gLines.forEach(ln=>{ lines.push(T(x+10,gy,ln,{size:10.5,color:'#333'})); gy+=13; });
+    yy += gH + 8;
+
+    // 변화방향 스트레스 박스
+    const stLines = wrapSvgText(k.stressDesc||'', charW-2);
+    const stH = 26 + stLines.length*13 + 8;
+    lines.push(`<rect x="${x}" y="${yy}" width="${colW}" height="${stH}" rx="6" fill="#faf0f0" stroke="#b5462f" stroke-width="1.2"/>`);
+    lines.push(T(x+10,yy+17,'😰 스트레스 받을 때',{size:10.5,weight:700,color:'#b5462f'}));
+    let sty=yy+30; stLines.forEach(ln=>{ lines.push(T(x+10,sty,ln,{size:10.5,color:'#333'})); sty+=13; });
+    yy += stH + 8;
+
+    // 좌우명
+    lines.push(`<rect x="${x}" y="${yy}" width="${colW}" height="34" rx="6" fill="rgba(185,129,47,0.1)" stroke="rgba(185,129,47,0.3)" stroke-width="1"/>`);
+    lines.push(T(x+colW/2,yy+21,`"${k.motto}"`,{size:11,weight:600,color:'#b9812f',anchor:'middle'}));
+    yy += 42;
+
+    return {svg:lines.join(''), endY:yy};
+  }
+  const left = summaryBlock(50, ka, a.name, '#1f4fd8');
+  const right = summaryBlock(50+(W-100)/2+20, kb, b.name, '#e01e37');
+  parts.push(left.svg); parts.push(right.svg);
+  y = Math.max(left.endY, right.endY)+40;
+  // 푸터
+  parts.push(`<line x1="40" y1="${y}" x2="${W-40}" y2="${y}" stroke="#ddd"/>`); y+=26;
+  parts.push(T(W/2,y,'AROM.D',{size:16,weight:700,color:'#232946',anchor:'middle'}));y+=20;
+  parts.push(T(W/2,y,'커플 에니어그램 · 9개 유형에 따른 커플 분석',{size:11,color:'#7a7266',anchor:'middle'}));y+=16;
+  parts.push(T(W/2,y,'© AROM.D. 무단 복제·배포를 금합니다.',{size:10,color:'#7a7266',anchor:'middle'}));y+=30;
+
+  const H=y;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><rect width="${W}" height="${H}" fill="#f6f2ea"/>${parts.join('')}</svg>`;
+}
+
+function doPrint(){
+  const rec = state.lastResult;
+  if(!rec){ return; }
+  const svg = buildResultSVG(rec);
+  saveSvgAsImage(svg, `에니어그램_${rec.name||'결과'}.png`);
+}
+
+function renderResult(app){
+  const rec = state.lastResult;
+  if(!rec){ state.view = IS_ADMIN ? 'landing' : 'intro'; render(); return; }
+  const ranked = TYPES.map(t=>({...t, score:rec.scores[t.id]})).sort((a,b)=>b.score-a.score);
+  const top = ranked[0];
+  const w = calcWing(rec.scores);
+  const isTie = ranked.length>1 && ranked[0].score === ranked[1].score;
+  const tieNote = isTie ? `<p style="margin-top:6px;font-size:12px;color:#e3b06a;">※ ${ranked[0].id}번과 ${ranked[1].id}번이 동점입니다. 두 유형을 함께 살펴보세요.</p>` : '';
+  const emailBadge = IS_ADMIN
+    ? (rec.emailStatus==='failed'
+        ? `<button class="btn-ghost" id="resendBtn" style="color:#b5462f;border-color:#b5462f;">⚠️ 이메일 재전송</button>`
+        : (rec.emailStatus==='sent' ? `<span style="font-size:12px;color:var(--muted);align-self:center;">📧 이메일 전송됨</span>` : ''))
+    : '';
+
+  app.innerHTML = `
+    <div class="no-print" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:6px;align-items:center;">
+      ${emailBadge}
+      ${IS_ADMIN ? `<button class="btn-ghost" id="toListBtn">목록으로</button>` : ''}
+      <button class="btn-ghost" id="printBtn">📷 이미지로 저장</button>
+    </div>
+
+    <div class="top-result-banner">
+      <div class="eyebrow">${esc(rec.name)}님의 결과</div>
+      <h2 class="serif">${w.label} · ${top.name}${w.wingName?` (${w.wingName})`:''}</h2>
+      <p>${top.tagline||''}</p>
+      ${tieNote}
+    </div>
+
+    <div class="card">
+      <h3>유형 분포</h3>
+      <div id="chartHolder" style="display:flex;justify-content:center;padding:10px 0;"></div>
+    </div>
+
+    <div class="card">
+      <h3>유형별 점수 프로파일</h3>
+      <div id="lineChartHolder" style="overflow-x:auto;"></div>
+    </div>
+
+    <div class="card">
+      <h3>대표 유형 상세</h3>
+      ${personCardBody(coupleKeywords(rec), typeColor(top.id), rec.name)}
+    </div>
+
+    <div class="card">
+      <h3>유형별 순위</h3>
+      <div class="rank-grid">
+        ${ranked.map((t,i)=>`
+          <div class="rank-card">
+            <div class="rank-card-num" style="background:${typeColor(t.id)};">${t.id}</div>
+            <div class="rank-card-name">${t.name}</div>
+            <div class="rank-card-sub">${t.sub}</div>
+            <div class="rank-card-score">${t.score}</div>
+            <div class="rank-card-score-label">/45</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    ${!IS_ADMIN ? `<div class="no-print" style="text-align:center;margin-top:8px;"><p style="color:var(--muted);font-size:13px;">참여해주셔서 감사합니다. 이 결과는 담당자에게도 자동으로 전달되었습니다.</p></div>` : ''}
+  `;
+
+  drawRadar(document.getElementById('chartHolder'), rec.scores);
+  document.getElementById('lineChartHolder').innerHTML = profileLineSVG([{scores:rec.scores, color:'#1f4fd8'}]);
+
+  if(IS_ADMIN){
+    const lb = document.getElementById('toListBtn');
+    if(lb) lb.onclick = ()=>{ state._listSynced=false; state.view='list'; render(); };
+  }
+  document.getElementById('printBtn').onclick = ()=>doPrint();
+  const rsb = document.getElementById('resendBtn');
+  if(rsb) rsb.onclick = async ()=>{
+    rsb.textContent = '전송 중...'; rsb.disabled = true;
+    const ok = await sendResultEmail(rec);
+    alert(ok ? '이메일이 전송되었습니다.' : '전송에 실패했어요. 인터넷 연결을 확인해주세요.');
+    renderResult(app);
+  };
+}
+
+function drawRadar(container, scores){
+  // viewBox를 크게 잡아 라벨이 절대 잘리지 않게 함
+  const VB=420, cx=VB/2, cy=VB/2, R=120, maxScore=45, n=9;
+  const ORDER = [9,1,2,3,4,5,6,7,8];
+  const angle = i => (Math.PI*2*i/n) - Math.PI/2;
+  const pt = (i,r) => [cx + r*Math.cos(angle(i)), cy + r*Math.sin(angle(i))];
+
+  let rings='';
+  [0.25,0.5,0.75,1].forEach(f=>{
+    let pts=[]; for(let i=0;i<n;i++){ const [x,y]=pt(i,R*f); pts.push(`${x},${y}`); }
+    rings += `<polygon points="${pts.join(' ')}" fill="none" stroke="#d9d0bd" stroke-width="1"/>`;
+  });
+
+  let spokes='', labels='';
+  for(let i=0;i<n;i++){
+    const [x,y]=pt(i,R);
+    spokes += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#d9d0bd" stroke-width="1"/>`;
+    const t = TYPES.find(v=>v.id===ORDER[i]);
+    const [lx,ly] = pt(i, R+34);
+    const c = Math.cos(angle(i)), s = Math.sin(angle(i));
+    let anchor = 'middle';
+    if(c > 0.3) anchor='start'; else if(c < -0.3) anchor='end';
+    // 숫자(위)와 유형명(아래) 두 줄로 배치
+    labels += `<text x="${lx}" y="${ly-6}" font-size="15" font-weight="700" text-anchor="${anchor}" fill="#232946" font-family="Noto Sans KR, sans-serif">${ORDER[i]}</text>`;
+    labels += `<text x="${lx}" y="${ly+11}" font-size="12" font-weight="500" text-anchor="${anchor}" fill="#5a5550" font-family="Noto Sans KR, sans-serif">${t.name}</text>`;
+  }
+
+  let dp=[]; for(let i=0;i<n;i++){ dp.push(pt(i, ((scores[ORDER[i]]||0)/maxScore)*R)); }
+  const poly = dp.map(p=>p.join(',')).join(' ');
+  const dots = dp.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${typeColor(ORDER[i])}"/>`).join('');
+
+  container.innerHTML = `<svg width="100%" viewBox="0 0 ${VB} ${VB}" style="max-width:420px;display:block;margin:0 auto;">${rings}${spokes}<polygon points="${poly}" fill="rgba(35,41,70,0.18)" stroke="#232946" stroke-width="2"/>${dots}${labels}</svg>`;
+}
+
+/* ---------- 커플 프로파일 ---------- */
+// KEPTI 스타일 꺾은선 그래프: 가로축 2,3,4,5,6,7,8,9,1 / 세로축 9~45 / 두 사람 선 겹침
+function profileLineSVG(seriesList){
+  const W=740, H=560, padL=44, padR=78, padT=48, padB=48;
+  const plotW = W-padL-padR, plotH = H-padT-padB;
+  const yMin=9, yMax=45;
+  const n = PROFILE_ORDER.length;
+  const colW = plotW/n;
+  const xAt = i => padL + colW*(i+0.5);
+  const yAt = v => padT + plotH*(1-(v-yMin)/(yMax-yMin));
+
+  const groups = [
+    {txt:'가슴(감정)중심', from:0, to:2, bg:'#eef4f9'},
+    {txt:'머리(사고)중심', from:3, to:5, bg:'#dceaf5'},
+    {txt:'장(본능)중심', from:6, to:8, bg:'#eef4f9'},
+  ];
+  let groupBg='';
+  groups.forEach(g=>{
+    const xL = padL+colW*g.from, xR = padL+colW*(g.to+1);
+    groupBg += `<rect x="${xL.toFixed(1)}" y="${padT}" width="${(xR-xL).toFixed(1)}" height="${plotH}" fill="${g.bg}"/>`;
+  });
+
+  let grid='';
+  for(let v=yMin; v<=yMax; v++){
+    const y=yAt(v);
+    grid += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${padL+plotW}" y2="${y.toFixed(1)}" stroke="#c9d6e2" stroke-width="0.5"/>`;
+  }
+  for(let v=9; v<=45; v+=3){
+    const y=yAt(v);
+    grid += `<text x="${padL-6}" y="${(y+3).toFixed(1)}" font-size="9" text-anchor="end" fill="#7a8a9a">${v}</text>`;
+    grid += `<text x="${padL+plotW+4}" y="${(y+3).toFixed(1)}" font-size="9" text-anchor="start" fill="#7a8a9a">${v}</text>`;
+  }
+
+  const zoneLabels = [
+    {v:45, label:'매우높음'},{v:36, label:'평균이상'},{v:27, label:'평균'},{v:18, label:'평균이하'},{v:9, label:'매우낮음'},
+  ];
+  let zlabels='';
+  zoneLabels.forEach(z=>{
+    const y=yAt(z.v);
+    zlabels += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${padL+plotW}" y2="${y.toFixed(1)}" stroke="#9fb3c4" stroke-width="1"/>`;
+    zlabels += `<text x="${padL+plotW+18}" y="${(y+3).toFixed(1)}" font-size="10" fill="#4a6580" font-weight="600">${z.label}</text>`;
+  });
+
+  let cols='';
+  for(let i=0;i<=n;i++){
+    const x=padL+colW*i;
+    cols += `<line x1="${x.toFixed(1)}" y1="${padT}" x2="${x.toFixed(1)}" y2="${padT+plotH}" stroke="#b8c8d6" stroke-width="0.8"/>`;
+  }
+  groups.forEach(g=>{
+    const xR = padL+colW*(g.to+1);
+    cols += `<line x1="${xR.toFixed(1)}" y1="${padT}" x2="${xR.toFixed(1)}" y2="${padT+plotH}" stroke="#7a94a8" stroke-width="1.5"/>`;
+  });
+
+  let xnum='';
+  for(let i=0;i<n;i++){
+    xnum += `<text x="${xAt(i).toFixed(1)}" y="${(padT+plotH+18).toFixed(1)}" font-size="13" font-weight="700" text-anchor="middle" fill="#20242b">${PROFILE_ORDER[i]}</text>`;
+  }
+
+  let groupHdr='';
+  groups.forEach(g=>{
+    const xL = padL+colW*g.from, xR = padL+colW*(g.to+1);
+    const xMid = (xL+xR)/2;
+    groupHdr += `<text x="${xMid.toFixed(1)}" y="${padT-14}" font-size="11" text-anchor="middle" fill="#4a6580" font-weight="600">${g.txt}</text>`;
+  });
+
+  function linePath(scores, color){
+    const pts = PROFILE_ORDER.map((tid,i)=>[xAt(i), yAt(Math.max(yMin,Math.min(yMax,scores[tid]||yMin)))]);
+    const path = pts.map((p,i)=>`${i===0?'M':'L'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
+    const dots = pts.map(p=>`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="5" fill="${color}" stroke="#fff" stroke-width="1.5"/>`).join('');
+    return `<path d="${path}" fill="none" stroke="${color}" stroke-width="2.5"/>${dots}`;
+  }
+  const lines = seriesList.map(s=>linePath(s.scores, s.color)).join('');
+
+  return `<svg width="100%" viewBox="0 0 ${W} ${H}" style="max-width:${W}px;">
+    <rect x="${padL}" y="${padT}" width="${plotW}" height="${plotH}" fill="#f5faff" stroke="#7a94a8" stroke-width="1.2"/>
+    ${groupBg}${grid}${zlabels}${cols}${xnum}${groupHdr}
+    ${lines}
+  </svg>`;
+}
+
+function coupleLineSVG(scoresA, scoresB){
+  return profileLineSVG([{scores:scoresA, color:'#1f4fd8'}, {scores:scoresB, color:'#e01e37'}]);
+}
+function personLineSVG(scores){
+  return profileLineSVG([{scores:scores, color:'#232946'}]);
+}
+
+function coupleKeywords(person){
+  const w = calcWing(person.scores);
+  const main = typeById(w.main);
+  const wingT = typeById(w.wing);
+  const dir = typeDirections(w.main);
+  return {
+    label: `${w.label} ${w.wingName||main.name}`,
+    typeLabel: `${main.id}번 ${main.name}`,
+    main, wing:w.wing, wingTypeName: wingT.name, wingNick: w.wingName, wingDesc: w.wingDesc,
+    tagline: main.tagline,
+    desc: main.desc,
+    strength: main.strength, weakness: main.weakness, growth: main.growth, motto: main.motto, jobs: main.jobs,
+    stressType: typeById(dir.stress), growthType: typeById(dir.growth),
+    growthDesc: GROWTH_DESC[w.main], stressDesc: STRESS_DESC[w.main],
+    keywords: TYPE_KEYWORDS[w.main] || '',
+  };
+}
+
+function personCardBody(k, color, name){
+  return `
+    <div style="margin-bottom:20px;padding:16px;background:linear-gradient(135deg, rgba(${parseInt(color.slice(1,3),16)},${parseInt(color.slice(3,5),16)},${parseInt(color.slice(5,7),16)},0.08), transparent);border-radius:8px;border-left:4px solid ${color};">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;font-weight:600;">▸ ${esc(name)}</div>
+      <h2 style="margin:0 0 8px;font-size:26px;color:${color};font-family:'Noto Serif KR',serif;font-weight:700;">${k.label}</h2>
+      <div style="font-size:12.5px;color:var(--muted);">${k.typeLabel} • ${k.tagline}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:#7a7266;text-transform:uppercase;letter-spacing:.08em;padding-bottom:6px;border-bottom:2px solid var(--line);margin-bottom:10px;">📋 특징</div>
+      <p style="margin:0;font-size:14px;line-height:1.8;color:var(--ink);">${k.desc}</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;border-top:2px solid var(--line);border-bottom:2px solid var(--line);padding:18px 0;">
+      <div style="padding:16px;background:#f0f5f0;border-radius:8px;border:2px solid #2a7d4f;display:flex;flex-direction:column;">
+        <div style="font-size:12px;font-weight:700;color:#2a7d4f;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">✓ 강점</div>
+        <div style="font-size:13.5px;color:var(--ink);line-height:1.8;word-break:break-word;overflow-wrap:break-word;">${k.strength}</div>
+      </div>
+      <div style="padding:16px;background:#faf0f0;border-radius:8px;border:2px solid #b5462f;display:flex;flex-direction:column;">
+        <div style="font-size:12px;font-weight:700;color:#b5462f;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;">✗ 약점</div>
+        <div style="font-size:13.5px;color:var(--ink);line-height:1.8;word-break:break-word;overflow-wrap:break-word;">${k.weakness}</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:#7a7266;text-transform:uppercase;letter-spacing:.08em;padding-bottom:6px;border-bottom:2px solid ${color};margin-bottom:10px;">🪶 날개</div>
+      <div style="font-size:13.5px;color:var(--ink);line-height:1.7;padding:10px;background:linear-gradient(135deg, rgba(${parseInt(color.slice(1,3),16)},${parseInt(color.slice(3,5),16)},${parseInt(color.slice(5,7),16)},0.05), transparent);border-radius:6px;">${k.wingDesc}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:#7a7266;text-transform:uppercase;letter-spacing:.08em;padding-bottom:6px;border-bottom:2px solid var(--line);margin-bottom:10px;">🚀 성장 전략</div>
+      <div style="font-size:13.5px;color:var(--ink);line-height:1.7;padding:10px;background:var(--paper-2);border-radius:6px;">${k.growth}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:#7a7266;text-transform:uppercase;letter-spacing:.08em;padding-bottom:6px;border-bottom:2px solid var(--line);margin-bottom:10px;">⚡ 변화 방향</div>
+      <div style="display:grid;gap:10px;">
+        <div style="padding:12px;background:linear-gradient(135deg, #f0f5f0, transparent);border-radius:6px;border-left:3px solid #2a7d4f;">
+          <div style="font-size:12px;font-weight:700;color:#2a7d4f;margin-bottom:4px;">😊 안정될 때</div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.6;">${k.growthDesc||''}</div>
+        </div>
+        <div style="padding:12px;background:linear-gradient(135deg, #faf0f0, transparent);border-radius:6px;border-left:3px solid #b5462f;">
+          <div style="font-size:12px;font-weight:700;color:#b5462f;margin-bottom:4px;">😰 스트레스 받을 때</div>
+          <div style="font-size:13px;color:var(--ink);line-height:1.6;">${k.stressDesc||''}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px;font-weight:700;color:#7a7266;text-transform:uppercase;letter-spacing:.08em;padding-bottom:6px;border-bottom:2px solid var(--line);margin-bottom:10px;">💼 추천 직업</div>
+      <div style="font-size:13.5px;color:var(--ink);line-height:1.7;padding:10px;background:var(--paper-2);border-radius:6px;">${k.jobs}</div>
+    </div>
+
+    <div style="padding:14px;background:linear-gradient(135deg, rgba(185,129,47,0.12), rgba(185,129,47,0.04));border-radius:8px;border:1px solid rgba(185,129,47,0.3);text-align:center;">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;">좌우명</div>
+      <div style="font-size:15px;font-weight:700;color:#b9812f;font-family:'Noto Serif KR',serif;font-style:italic;line-height:1.6;">"${k.motto}"</div>
+    </div>`;
+}
+
+function renderCouple(app){
+  const c = state.couple;
+  if(!c){ state.view='list'; render(); return; }
+  const a = c.a, b = c.b; // a=첫번째 선택(파랑), b=두번째(빨강)
+  const ka = coupleKeywords(a), kb = coupleKeywords(b);
+  const dateStr = (()=>{ const d=new Date(); return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`; })();
+
+  app.innerHTML = `
+    <div class="no-print" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:6px;">
+      <button class="btn-ghost" id="backListBtn">목록으로</button>
+      <button class="btn-ghost" id="couplePrintBtn">📷 이미지로 저장</button>
+    </div>
+
+    <div class="top-result-banner">
+      <div class="eyebrow">AROM:D · 부부심리상담사 · 커플 프로파일</div>
+      <h2 class="serif">${esc(a.name)} <span style="color:#e3b06a;">♥</span> ${esc(b.name)}</h2>
+      <p>${dateStr}</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+      <div style="background:linear-gradient(135deg,#1f4fd8,#3a6ae8);border-radius:10px;padding:14px 12px;text-align:center;color:#fff;box-shadow:0 2px 8px rgba(31,79,216,0.25);">
+        <div style="font-size:11px;opacity:.85;margin-bottom:4px;">${esc(a.name)}</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;">${ka.label.split(' ')[0]} ${ka.main.name}${ka.wingNick?` · ${ka.wingNick}`:''}</div>
+        <div style="font-size:11.5px;line-height:1.6;opacity:.92;word-break:keep-all;">${ka.keywords}</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#e01e37,#f04458);border-radius:10px;padding:14px 12px;text-align:center;color:#fff;box-shadow:0 2px 8px rgba(224,30,55,0.25);">
+        <div style="font-size:11px;opacity:.85;margin-bottom:4px;">${esc(b.name)}</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:8px;">${kb.label.split(' ')[0]} ${kb.main.name}${kb.wingNick?` · ${kb.wingNick}`:''}</div>
+        <div style="font-size:11.5px;line-height:1.6;opacity:.92;word-break:keep-all;">${kb.keywords}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>유형별 점수 프로파일</h3>
+      <div style="display:flex;gap:16px;font-size:12.5px;margin-bottom:8px;">
+        <span><span style="display:inline-block;width:12px;height:12px;background:#1f4fd8;border-radius:2px;vertical-align:middle;"></span> ${esc(a.name)}</span>
+        <span><span style="display:inline-block;width:12px;height:12px;background:#e01e37;border-radius:2px;vertical-align:middle;"></span> ${esc(b.name)}</span>
+      </div>
+      <div id="coupleChart" style="overflow-x:auto;"></div>
+    </div>
+
+    <div class="row2">
+      <div class="card" style="border-top:3px solid #1f4fd8;">${personCardBody(ka, '#1f4fd8', a.name)}</div>
+      <div class="card" style="border-top:3px solid #e01e37;">${personCardBody(kb, '#e01e37', b.name)}</div>
+    </div>
+
+    <div class="card">
+      <h3>두 사람 유형 점수</h3>
+      <table>
+        <thead><tr><th>유형</th><th style="text-align:right;color:#1f4fd8;">${esc(a.name)}</th><th style="text-align:right;color:#e01e37;">${esc(b.name)}</th></tr></thead>
+        <tbody>
+          ${PROFILE_ORDER.map(tid=>{
+            const t=typeById(tid);
+            return `<tr><td>${tid}번 ${t.name}</td><td style="text-align:right;font-family:monospace;">${a.scores[tid]}</td><td style="text-align:right;font-family:monospace;">${b.scores[tid]}</td></tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  document.getElementById('coupleChart').innerHTML = coupleLineSVG(a.scores, b.scores);
+  document.getElementById('backListBtn').onclick = ()=>{ state._listSynced=false; state.view='list'; render(); };
+  document.getElementById('couplePrintBtn').onclick = ()=>doPrintCouple();
+}
+
+function buildCouplePrintContent(){
+  const c = state.couple; const a=c.a, b=c.b;
+  const ka = coupleKeywords(a), kb = coupleKeywords(b);
+  const d=new Date(); const dateStr=`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+  const rows = PROFILE_ORDER.map(tid=>{
+    const t=typeById(tid);
+    return `<tr><td>${tid}번 ${t.name}</td><td style="text-align:right;font-family:monospace;">${a.scores[tid]}</td><td style="text-align:right;font-family:monospace;">${b.scores[tid]}</td></tr>`;
+  }).join('');
+  return `
+    <h1>커플 에니어그램 프로파일</h1>
+    <div class="p-sub">AROM:D · 부부심리상담사 · ${dateStr}</div>
+    <div class="p-banner">
+      <div class="p-t">커플 프로파일</div>
+      <h2>${esc(a.name)} ♥ ${esc(b.name)}</h2>
+      <p>${ka.label} &nbsp;♥&nbsp; ${kb.label}</p>
+    </div>
+    <div class="p-chart">${coupleLineSVG(a.scores, b.scores)}</div>
+    <div style="display:flex;gap:12px;margin:6px 0 14px;">
+      <div style="flex:1;border-top:3px solid #1f4fd8;padding-top:6px;font-size:11.5px;line-height:1.6;">
+        <b style="color:#1f4fd8;font-size:13px;">${esc(a.name)}</b> · ${ka.label}<br>
+        <span style="color:#555;">${ka.desc}</span><br>
+        <b>강점</b> ${ka.strength}<br>
+        <b>약점</b> ${ka.weakness}<br>
+        <b>날개 ${ka.label}</b> ${ka.wingDesc}<br>
+        <b>성장 전략</b> ${ka.growth}<br>
+        <b>변화 방향</b> 안정↑ ${ka.growthType.id}번 ${ka.growthType.name} / 스트레스↑ ${ka.stressType.id}번 ${ka.stressType.name}<br>
+        <b>추천 직업</b> ${ka.jobs}<br>
+        <span style="color:#b9812f;">"${ka.motto}"</span>
+      </div>
+      <div style="flex:1;border-top:3px solid #e01e37;padding-top:6px;font-size:11.5px;line-height:1.6;">
+        <b style="color:#e01e37;font-size:13px;">${esc(b.name)}</b> · ${kb.label}<br>
+        <span style="color:#555;">${kb.desc}</span><br>
+        <b>강점</b> ${kb.strength}<br>
+        <b>약점</b> ${kb.weakness}<br>
+        <b>날개 ${kb.label}</b> ${kb.wingDesc}<br>
+        <b>성장 전략</b> ${kb.growth}<br>
+        <b>변화 방향</b> 안정↑ ${kb.growthType.id}번 ${kb.growthType.name} / 스트레스↑ ${kb.stressType.id}번 ${kb.stressType.name}<br>
+        <b>추천 직업</b> ${kb.jobs}<br>
+        <span style="color:#b9812f;">"${kb.motto}"</span>
+      </div>
+    </div>
+    <table><thead><tr><td>유형</td><td style="text-align:right;">${esc(a.name)}</td><td style="text-align:right;">${esc(b.name)}</td></tr></thead><tbody>${rows}</tbody></table>
+    <div class="p-footer">
+      <div class="p-b">AROM.D</div>
+      <div class="p-c">커플 에니어그램 · 9개 유형에 따른 커플 분석<br>© AROM.D. 본 검사지 및 문항의 저작권은 AROM.D에 있으며, 무단 복제·배포를 금합니다.</div>
+    </div>`;
+}
+
+function doPrintCouple(){
+  const c = state.couple;
+  if(!c){ return; }
+  const svg = buildCoupleSVG();
+  saveSvgAsImage(svg, `커플프로파일_${c.a.name||''}_${c.b.name||''}.png`);
+}
+
+/* ---------- 목록 ---------- */
+// Firebase에서 최신 응답을 받아 로컬 캐시와 병합
+async function syncFromFirebase(){
+  const remote = await fbGetResponses();
+  if(remote === null) return false; // Firebase 미연결/실패 → 로컬 캐시 유지
+  const remoteIds = new Set(remote.map(r=>r.id));
+  // '_pending'(업로드 실패로 아직 못 올라간 것)만 다시 올린다. 그 외 로컬 전용은 무시(=다른 기기서 삭제된 것).
+  const local = getResponses();
+  for(const r of local){
+    if(r._pending && !remoteIds.has(r.id)){
+      const ok = await fbSaveResponse(r);
+      if(ok){ delete r._pending; remote.push(r); }
+    }
+  }
+  // Firebase 내용을 기준으로 로컬 캐시를 교체 → 다른 기기에서 삭제된 것은 여기서 사라짐
+  const sorted = remote.slice().sort((a,b)=> (a.date<b.date?-1:1));
+  saveResponses(sorted);
+  return true;
+}
+
+async function renderList(app){
+  const selecting = state.coupleSelecting || false;
+  const selected = state.coupleSelected || [];
+
+  // 먼저 로컬 캐시로 즉시 표시, 그다음 Firebase에서 최신본 동기화
+  if(!selecting && !state._listSynced){
+    syncFromFirebase().then(ok=>{
+      if(ok){ state._listSynced = true; if(state.view==='list') renderList(app); }
+    });
+  }
+  const allList = (await getResponses()).slice().reverse();
+
+  // 현재 검색어/페이지 기준으로 표시할 목록 계산
+  const PER = 20;
+  function computeView(){
+    const rawQ = (state.listSearch||'').trim();
+    const q = rawQ.toLowerCase();
+    let filtered;
+    if(!q){
+      filtered = allList;
+    } else {
+      // 이름: 글자 단위 매칭(초성·완성글자 혼합 가능) — 앞에서부터 일치하는 사람 우선
+      const starts = allList.filter(rec => koStartsWith(rec.name, rawQ));
+      const startIds = new Set(starts.map(r=>r.id));
+      const others = allList.filter(rec=>{
+        if(startIds.has(rec.id)) return false;
+        if(koIncludes(rec.name, rawQ)) return true;
+        // 이름이 아니면 유형·직업·관계도 일반 검색
+        const top = TYPES.map(t=>({...t, score:rec.scores[t.id]})).sort((a,b)=>b.score-a.score)[0];
+        const hay = [rec.job, rec.spouse, rec.relation, top.name].filter(Boolean).join(' ').toLowerCase();
+        return hay.includes(q);
+      });
+      filtered = [...starts, ...others];
+    }
+    if(state.listPage===undefined) state.listPage = 0;
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PER));
+    if(state.listPage >= totalPages) state.listPage = totalPages-1;
+    if(state.listPage < 0) state.listPage = 0;
+    const pageStart = state.listPage * PER;
+    return { q, filtered, totalPages, list: filtered.slice(pageStart, pageStart + PER) };
+  }
+  const v0 = computeView();
+
+  app.innerHTML = `
+    <div class="hero" style="padding-top:0;">
+      <h1 class="serif" style="font-size:24px;">응답 목록</h1>
+      <p id="listCount"></p>
+    </div>
+
+    <div class="no-print" style="display:flex;gap:8px;margin-bottom:14px;">
+      ${!selecting
+        ? `<button class="btn-primary" id="coupleStartBtn" style="flex:1;">💑 커플 프로파일 만들기</button>
+           <button class="btn-ghost" id="refreshBtn" style="flex-shrink:0;">↻</button>`
+        : `<button class="btn-primary" id="coupleMakeBtn" style="flex:1;" ${selected.length===2?'':'disabled'}>선택 완료 (${selected.length}/2)</button>
+           <button class="btn-ghost" id="coupleCancelBtn" style="flex:1;">취소</button>`}
+    </div>
+
+    ${!selecting ? `
+    <div class="no-print" style="margin-bottom:14px;">
+      <input type="text" id="listSearchInput" placeholder="🔍 이름·유형·직업 검색 (초성 ㅅ 가능)" value="${esc(state.listSearch||'')}"
+        style="width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:8px;font-size:14px;box-sizing:border-box;background:var(--white);color:var(--ink);">
+    </div>` : ''}
+
+    <div id="listBody"></div>
+    <div id="listEmpty"></div>
+    <div id="listPager" class="no-print"></div>
+  `;
+
+  // 목록/개수/페이지 버튼만 다시 그림 (검색창은 건드리지 않음 → 한글 조합 유지)
+  function paintList(){
+    const { q, filtered, totalPages, list } = computeView();
+
+    const cnt = document.getElementById('listCount');
+    if(cnt) cnt.textContent = `총 ${allList.length}건${q?` · 검색결과 ${filtered.length}건`:''}${selecting? ' · 커플로 묶을 두 사람을 선택하세요 ('+selected.length+'/2)':''}${(!selecting && !state._listSynced)? ' · 동기화 중…':''}`;
+
+    const tbody = document.getElementById('listBody');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+    list.forEach(rec=>{
+      const ranked = TYPES.map(t=>({...t, score:rec.scores[t.id]})).sort((a,b)=>b.score-a.score);
+      const top = ranked[0];
+      const w = calcWing(rec.scores);
+      const d = new Date(rec.date);
+      const isSel = selected.some(s=>s.id===rec.id);
+      const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+      const age = birthToIntlAge(rec.birth);
+      const info = [rec.gender, (rec.spouse?'배우자 '+rec.spouse:rec.relation), age!==''?`만 ${age}세`:'', rec.job].filter(Boolean).map(esc).join(' · ');
+      const row = document.createElement('div');
+      row.className = 'list-row' + (isSel?' sel':'');
+
+      if(selecting){
+        row.innerHTML = `
+          <div class="lr-check">${isSel?'✅':'⬜'}</div>
+          <div class="lr-main">
+            <div class="lr-name">${esc(rec.name)}</div>
+            ${info?`<div class="lr-info">${info}</div>`:''}
+          </div>
+          <div class="lr-right">
+            <div class="lr-type" style="background:${typeColor(top.id)};">${w.label}</div>
+            <div class="lr-date mono">${dateStr}</div>
+          </div>`;
+        row.onclick = ()=>{
+          let sel = state.coupleSelected || [];
+          if(sel.some(s=>s.id===rec.id)){ sel = sel.filter(s=>s.id!==rec.id); }
+          else { if(sel.length>=2){ alert('두 사람까지만 선택할 수 있어요. 먼저 선택을 해제해주세요.'); return; } sel = [...sel, rec]; }
+          state.coupleSelected = sel;
+          renderList(app);
+        };
+      } else {
+        row.innerHTML = `
+          <div class="lr-main">
+            <div class="lr-name">${esc(rec.name)} <span class="lr-typename">${top.name}</span></div>
+            ${info?`<div class="lr-info">${info}</div>`:''}
+          </div>
+          <div class="lr-right">
+            <div class="lr-type" style="background:${typeColor(top.id)};">${w.label}</div>
+            <div class="lr-date mono">${dateStr}</div>
+          </div>
+          <div class="lr-del" data-id="${rec.id}" title="삭제">🗑</div>`;
+        row.onclick = (e)=>{
+          if(e.target.classList.contains('lr-del')){
+            e.stopPropagation();
+            if(confirm(`${rec.name}님의 응답을 삭제할까요? 되돌릴 수 없어요.`)){
+              const all = getResponses().filter(r=>r.id!==rec.id);
+              saveResponses(all);
+              fbDeleteResponse(rec.id);
+              renderList(app);
+            }
+            return;
+          }
+          state.lastResult = rec; state.view='result'; render();
+        };
+      }
+      tbody.appendChild(row);
+    });
+
+    const emptyBox = document.getElementById('listEmpty');
+    if(emptyBox){
+      emptyBox.innerHTML = (filtered.length===0 && state._listSynced)
+        ? `<div class="card"><p style="color:var(--muted);font-size:13.5px;margin:0;">${q?'검색 결과가 없습니다.':'아직 응답이 없습니다.'}</p></div>` : '';
+    }
+
+    const pager = document.getElementById('listPager');
+    if(pager){
+      pager.innerHTML = totalPages>1 ? `
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:18px 0;">
+          <button class="btn-ghost" id="prevPageBtn" ${state.listPage===0?'disabled':''} style="min-width:64px;">‹ 이전</button>
+          <span style="font-size:14px;color:var(--muted);font-weight:600;">${state.listPage+1} / ${totalPages}</span>
+          <button class="btn-ghost" id="nextPageBtn" ${state.listPage>=totalPages-1?'disabled':''} style="min-width:64px;">다음 ›</button>
+        </div>` : '';
+      const pp = document.getElementById('prevPageBtn');
+      if(pp) pp.onclick = ()=>{ if(state.listPage>0){ state.listPage--; paintList(); window.scrollTo(0,0); } };
+      const np = document.getElementById('nextPageBtn');
+      if(np) np.onclick = ()=>{ state.listPage++; paintList(); window.scrollTo(0,0); };
+    }
+  }
+  paintList();
+
+  if(!selecting){
+    const cs = document.getElementById('coupleStartBtn');
+    if(cs) cs.onclick = ()=>{ state.coupleSelecting=true; state.coupleSelected=[]; renderList(app); };
+    const rf = document.getElementById('refreshBtn');
+    if(rf) rf.onclick = ()=>{ state._listSynced=false; renderList(app); };
+
+    // 검색: 검색창은 절대 다시 만들지 않고, 목록 갱신도 조합이 완전히 끝난 뒤로 미룸
+    const si = document.getElementById('listSearchInput');
+    if(si){
+      let composing = false;
+      let timer = null;
+      let lastPainted = state.listSearch || '';
+      const schedule = ()=>{
+        clearTimeout(timer);
+        let waited = false;
+        timer = setTimeout(function run(){
+          // 조합 중이면 아주 잠깐만 한 번 더 기다렸다가, 그래도 진행 (반응 속도 유지)
+          if(composing && !waited){ waited = true; timer = setTimeout(run, 110); return; }
+          const v = si.value;
+          if(v === lastPainted) return;   // 바뀐 게 없으면 그리지 않음
+          lastPainted = v;
+          state.listSearch = v;
+          state.listPage = 0;
+          paintList();
+        }, 160);
+      };
+      si.addEventListener('compositionstart', ()=>{ composing = true; clearTimeout(timer); });
+      si.addEventListener('compositionend', ()=>{ composing = false; schedule(); });
+      si.addEventListener('input', ()=>{ schedule(); });
+      si.addEventListener('blur', ()=>{ composing = false; schedule(); });
+    }
+  } else {
+    const cm = document.getElementById('coupleMakeBtn');
+    if(cm) cm.onclick = ()=>{
+      if((state.coupleSelected||[]).length!==2){ alert('두 사람을 선택해주세요.'); return; }
+      state.couple = { a: state.coupleSelected[0], b: state.coupleSelected[1] };
+      state.coupleSelecting=false;
+      state.view='couple';
+      render();
+    };
+    const cc = document.getElementById('coupleCancelBtn');
+    if(cc) cc.onclick = ()=>{ state.coupleSelecting=false; state.coupleSelected=[]; renderList(app); };
+  }
+}
+
+async function init(){
+  // 관리자 모드 진입 시 비밀번호 확인
+  if(IS_ADMIN){
+    const ok = await checkAdminAuth();
+    if(!ok){
+      // 미인증 → 예쁜 잠금 화면 표시
+      renderAdminLock();
+      return;
+    }
+  }
+  if(!IS_ADMIN){
+    const d = getDraft();
+    if(draftHasProgress(d)){
+      if(confirm('작성하던 응답이 있어요. 이전에 작성한 문항부터 이어서 시작하시겠습니까?\n(취소를 누르면 처음부터 새로 시작합니다)')){
+        state.answers = d.answers || {};
+        state.meta = d.meta || {name:'',gender:'',spouse:'',job:'',birth:''};
+        state.page = Math.min(d.page || 0, TOTAL_PAGES);
+        state.view = 'survey';
+      } else {
+        clearDraft();
+      }
+    }
+  }
+  render();
+}
+init();
+</script>
+</body>
+</html>
