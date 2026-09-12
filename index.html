@@ -654,7 +654,7 @@ let state = {
   view: IS_ADMIN ? 'landing' : 'intro',
   answers: {},
   page: 0,
-  meta: {name:'', gender:'', relations:[], job:'', birth:''},
+  meta: {name:'', gender:'', spouse:'', job:'', birth:''},
   settings: null,
   responses: [],
   lastResult: null,
@@ -676,7 +676,7 @@ function render(){
     back.className='navlink'; back.textContent='← 처음으로';
     back.onclick = async ()=>{
       if(state.view==='survey') await saveDraft();
-      state.view='landing'; state.answers={}; state.page=0; state.meta={name:'',gender:'',relations:[],job:'',birth:''}; render();
+      state.view='landing'; state.answers={}; state.page=0; state.meta={name:'',gender:'',spouse:'',job:'',birth:''}; render();
     };
     navRight.appendChild(back);
   }
@@ -758,7 +758,7 @@ async function renderLanding(app){
         <button class="btn-ghost" id="adminLockBtn" style="flex:1;">로그아웃</button>
       </div>
       <div style="text-align:center;margin-top:12px;font-size:11.5px;color:var(--muted);">
-        버전 <b>v9</b> · 2026.07.22
+        버전 <b>v10</b> · 2026.07.22
       </div>
     </div>
   `;
@@ -777,7 +777,7 @@ async function renderLanding(app){
   if(hasDraft){
     document.getElementById('resumeBtn').onclick = ()=>{
       state.answers = draft.answers || {};
-      state.meta = draft.meta || {name:'',gender:'',relations:[],job:'',birth:''};
+      state.meta = draft.meta || {name:'',gender:'',spouse:'',job:'',birth:''};
       state.page = Math.min(draft.page || 0, TOTAL_PAGES);
       state.view = 'survey';
       render();
@@ -792,7 +792,7 @@ async function renderLanding(app){
 
   document.getElementById('manualBtn').onclick = async ()=>{
     if(hasDraft){ await clearDraft(); }
-    state.view='survey'; state.answers={}; state.page=0; state.meta={name:'',gender:'',relations:[],job:'',birth:''}; render(); window.scrollTo(0,0);
+    state.view='survey'; state.answers={}; state.page=0; state.meta={name:'',gender:'',spouse:'',job:'',birth:''}; render(); window.scrollTo(0,0);
   };
   document.getElementById('listBtn').onclick = ()=>{ state._listSynced=false; state.view='list'; render(); };
   const lockBtn = document.getElementById('adminLockBtn');
@@ -824,44 +824,6 @@ function _pickerData(){
   const months=[]; for(let m=1;m<=12;m++) months.push(m);
   const days=[]; for(let d=1;d<=31;d++) days.push(d);
   return {years, months, days};
-}
-function setupRelationChips(){
-  const pick = document.getElementById('metaRelationPick');
-  const wrap = document.getElementById('relationChips');
-  if(!pick || !wrap) return;
-  if(!Array.isArray(state.meta.relations)) state.meta.relations = [];
-  function draw(){
-    wrap.innerHTML = state.meta.relations.map((r,i)=>
-      `<span class="chip">${esc(r)}<span class="chip-x" data-i="${i}">✕</span></span>`
-    ).join('');
-    wrap.querySelectorAll('.chip-x').forEach(x=>{
-      x.onclick = ()=>{
-        const i = +x.dataset.i;
-        state.meta.relations.splice(i,1);
-        saveDraft(); draw();
-      };
-    });
-  }
-  pick.onchange = ()=>{
-    const v = pick.value;
-    if(!v){ pick.value=''; return; }
-    // 여러 명 가능한 관계(아들·딸·손자·손녀·형제·자매): 같은 관계 추가 시 번호 붙임
-    const multi = ['아들','딸','손자','손녀','형제','자매'];
-    if(multi.includes(v)){
-      const sameCount = state.meta.relations.filter(r=>r===v || r.startsWith(v)).length;
-      const label = sameCount===0 ? v : `${v}${sameCount+1}`;
-      state.meta.relations.push(label);
-      saveDraft(); draw();
-    } else {
-      // 단일 관계(남편/아내/본인/부/모/조부/조모/기타): 중복 방지
-      if(!state.meta.relations.includes(v)){
-        state.meta.relations.push(v);
-        saveDraft(); draw();
-      }
-    }
-    pick.value = ''; // 다시 "+ 추가"로 리셋
-  };
-  draw();
 }
 
 function setupBirthPicker(){
@@ -980,7 +942,7 @@ function renderIntro(app){
     <button class="btn-primary btn-block" id="introStartBtn" style="padding:15px;font-size:16px;">검사 시작하기 →</button>
   `;
   document.getElementById('introStartBtn').onclick = ()=>{
-    state.answers = {}; state.page = 0; state.meta = {name:'',gender:'',relations:[],job:'',birth:''};
+    state.answers = {}; state.page = 0; state.meta = {name:'',gender:'',spouse:'',job:'',birth:''};
     clearDraft();
     state.view = 'survey';
     render(); window.scrollTo(0,0);
@@ -1016,20 +978,14 @@ function renderSurvey(app){
             </select>
           </div>
           <div class="field">
-            <label class="field-label">가족관계 (여러 개 추가 가능)</label>
-            <select id="metaRelationPick">
-              ${['+ 추가','남편','아내','본인','아들','딸','부','모','조부','조모','형제','자매','손자','손녀','기타'].map(r=>{
-                const v = r==='+ 추가'?'':r;
-                return `<option value="${v}">${r}</option>`;
-              }).join('')}
-            </select>
+            <label class="field-label">배우자 이름</label>
+            <input type="text" id="metaSpouse" value="${esc(state.meta.spouse||'')}" placeholder="예: 홍길동">
           </div>
         </div>
-        <div id="relationChips" class="chip-wrap"></div>
         <div class="field">
-          <label class="field-label">직업</label>
-          <input type="text" id="metaJob" value="${state.meta.job||''}" placeholder="예: 초등학교 교사, 카페 운영, 대학생 등">
-          <div style="font-size:11.5px;color:var(--muted);margin-top:4px;">가능한 구체적으로 적어주세요. (예: "회사원"보다 "IT회사 마케팅팀")</div>
+          <label class="field-label">직업 / 세부직무</label>
+          <input type="text" id="metaJob" value="${esc(state.meta.job||'')}" placeholder="예: 회사원(마케팅), 간호사(산부인과)">
+          <div style="font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5;">직업 적합도 분석에 활용되므로, 현재 담당 업무까지 구체적으로 작성해주세요.<br>예) 회사원(마케팅) / 간호사(산부인과)</div>
         </div>
         <div class="field">
           <label class="field-label">생년월일 (위아래로 밀어서 선택)</label>
@@ -1096,7 +1052,6 @@ function renderSurvey(app){
     });
   } else {
     setupBirthPicker();
-    setupRelationChips();
   }
 
   if(page>0) document.getElementById('prevBtn').onclick = ()=>{ state.page--; saveDraft(); window.scrollTo(0,0); render(); };
@@ -1107,7 +1062,8 @@ function renderSurvey(app){
       if(!nm){ alert('이름을 입력해주세요.'); return; }
       state.meta.name = nm;
       state.meta.gender = document.getElementById('metaGender').value;
-      // relations는 칩 추가 시 state에 이미 반영됨
+      const spouseEl = document.getElementById('metaSpouse');
+      state.meta.spouse = spouseEl ? spouseEl.value.trim() : '';
       state.meta.job = document.getElementById('metaJob').value.trim();
       state.meta.birth = readBirthPicker();
       state.page++; await saveDraft(); window.scrollTo(0,0); render(); return;
@@ -1185,7 +1141,7 @@ async function submitSurvey(){
   }
   const record = {
     id: 'r_' + Date.now() + '_' + Math.random().toString(36).slice(2,7),
-    name: state.meta.name||'', gender: state.meta.gender||'', relation: (state.meta.relations||[]).join(', '), job: state.meta.job||'', birth: state.meta.birth||'',
+    name: state.meta.name||'', gender: state.meta.gender||'', spouse: state.meta.spouse||'', relation: '', job: state.meta.job||'', birth: state.meta.birth||'',
     date: new Date().toISOString(),
     answers: state.answers,
     scores,
@@ -1279,7 +1235,7 @@ function buildPrintContent(rec){
     <div class="p-sub">${dateStr}</div>
     <div class="p-info">
       이름: ${esc(rec.name)}<br>
-      성별: ${rec.gender||'-'} &nbsp;|&nbsp; 가족관계: ${esc(rec.relation)||'-'} &nbsp;|&nbsp; 직업: ${esc(rec.job)||'-'}<br>
+      성별: ${rec.gender||'-'} &nbsp;|&nbsp; 배우자: ${esc(rec.spouse||rec.relation)||'-'} &nbsp;|&nbsp; 직업: ${esc(rec.job)||'-'}<br>
       생년월일: ${rec.birth||'-'}
     </div>
     <div class="p-banner">
@@ -1398,7 +1354,7 @@ function buildResultSVG(rec){
   y+=bannerH+20;
   
   // 정보
-  const info = [rec.gender, rec.relation, age!==''?`만 ${age}세`:'', rec.job].filter(Boolean).join('  ·  ');
+  const info = [rec.gender, (rec.spouse?'배우자 '+rec.spouse:rec.relation), age!==''?`만 ${age}세`:'', rec.job].filter(Boolean).join('  ·  ');
   parts.push(T(40,y,`${esc(rec.name)}   ${esc(info)}`,{size:13,color:'#444'})); y+=30;
   
   // 레이더 차트
@@ -2089,7 +2045,7 @@ async function renderList(app){
         if(koIncludes(rec.name, rawQ)) return true;
         // 이름이 아니면 유형·직업·관계도 일반 검색
         const top = TYPES.map(t=>({...t, score:rec.scores[t.id]})).sort((a,b)=>b.score-a.score)[0];
-        const hay = [rec.job, rec.relation, top.name].filter(Boolean).join(' ').toLowerCase();
+        const hay = [rec.job, rec.spouse, rec.relation, top.name].filter(Boolean).join(' ').toLowerCase();
         return hay.includes(q);
       });
       filtered = [...starts, ...others];
@@ -2146,7 +2102,7 @@ async function renderList(app){
       const isSel = selected.some(s=>s.id===rec.id);
       const dateStr = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
       const age = birthToIntlAge(rec.birth);
-      const info = [rec.gender, rec.relation, age!==''?`만 ${age}세`:'', rec.job].filter(Boolean).map(esc).join(' · ');
+      const info = [rec.gender, (rec.spouse?'배우자 '+rec.spouse:rec.relation), age!==''?`만 ${age}세`:'', rec.job].filter(Boolean).map(esc).join(' · ');
       const row = document.createElement('div');
       row.className = 'list-row' + (isSel?' sel':'');
 
@@ -2278,7 +2234,7 @@ async function init(){
     if(draftHasProgress(d)){
       if(confirm('작성하던 응답이 있어요. 이전에 작성한 문항부터 이어서 시작하시겠습니까?\n(취소를 누르면 처음부터 새로 시작합니다)')){
         state.answers = d.answers || {};
-        state.meta = d.meta || {name:'',gender:'',relations:[],job:'',birth:''};
+        state.meta = d.meta || {name:'',gender:'',spouse:'',job:'',birth:''};
         state.page = Math.min(d.page || 0, TOTAL_PAGES);
         state.view = 'survey';
       } else {
