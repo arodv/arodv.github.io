@@ -26,15 +26,13 @@ document.addEventListener('DOMContentLoaded',()=>{
  [['#company','#a-about-details'],['#fields','#a-about-details'],['#process','#a-build-details'],['#flow','#a-build-details'],['#outcomes',null],['#faq','#a-maintenance-details']].forEach(([from,to])=>{const el=home.querySelector(from);if(el&&to)document.querySelector(to).append(el);});
  page('consumables',detail('RFID CONSUMABLES','소모품 판매','기관에서 사용하는 물품관리용 전자태그와 발행 소모품을 문의하세요. 장비 모델과 부착 환경에 맞는 규격을 확인해 안내합니다.','assets/566effd904ebd45a7b95.png',
  `<div class="a-consumable-grid"><article><img src="assets/566effd904ebd45a7b95.png" alt="RFID 물품관리 전자태그"><h2>RFID 전자태그</h2><p>물품의 재질·부착 위치·사용 환경을 확인해 적합한 태그 규격을 안내합니다.</p><button data-consumable="RFID 전자태그">판매 문의 ↗</button></article><article><img src="assets/566effd904ebd45a7b95.png" alt="라벨 인쇄 예시"><h2>태그·라벨 소모품</h2><p>사용 중인 태그 발행기 모델과 기존 라벨 규격, 필요 수량을 알려주세요.</p><button data-consumable="태그·라벨 소모품">판매 문의 ↗</button></article><article class="a-ribbon-product"><div class="a-ribbon-graphic" aria-hidden="true"><i></i><i></i></div><h2>발행기 리본</h2><p>발행기 모델과 태그·라벨 재질에 맞는 리본 사양 및 공급 가능 여부를 확인합니다.</p><button data-consumable="발행기 리본">판매 문의 ↗</button></article></div><p class="a-consumable-note">제품 규격과 판매 가격은 상담을 통해 안내합니다. 070-8803-4080 · kms@dbsoftbank.com</p>`));
- home.innerHTML=`<section class="a-hero" aria-label="회전하는 세계 지구본과 무중력 우주인"><div class="a-hero-graphic"><canvas id="a-hero-canvas" aria-hidden="true"></canvas><div class="a-chip-label" hidden></div></div><h1 class="a-accessible">RFID로 하나로 연결합니다.</h1><div class="a-scenes"><button class="a-pause" aria-label="배경 모션 일시정지" aria-pressed="false">Ⅱ</button></div><a class="a-scroll-cue" href="#a-visual-links" aria-label="콘텐츠 보기">↓</a><span class="a-motion-hint" hidden></span></section><section id="a-visual-links" class="a-visual-links" aria-label="주요 콘텐츠"><a class="a-visual-card a-case-card" href="#page-cases" aria-label="CASE STUDIES 구축사례"><div class="a-card-art a-case-art" aria-hidden="true"><div class="a-orbit-grid"></div><div class="a-data-globe"></div><i></i><i></i><i></i></div><h2>CASE<br>STUDIES</h2><span class="a-card-arrow">↗</span></a><a class="a-visual-card a-all-card" href="#page-build" aria-label="ALL-IN-ONE 올인원 서비스"><div class="a-card-art a-all-art" aria-hidden="true"><div class="a-chip-object"><div></div></div><i></i><i></i><i></i></div><h2>ALL-IN-ONE</h2><span class="a-card-arrow">↗</span></a><a class="a-visual-card a-clients-card" href="#page-clients" aria-label="CLIENTS 주요고객"><div class="a-client-orbits" aria-hidden="true"><i></i><i></i><i></i><b></b></div><h2>CLIENTS</h2><span class="a-card-arrow">↗</span></a></section>`;
+ home.innerHTML=`<section class="a-hero" aria-label="RFID 안테나를 따라 흐르는 빛"><div class="a-hero-graphic"><canvas id="a-hero-canvas" aria-hidden="true"></canvas><div class="a-chip-label" hidden></div></div><h1 class="a-accessible">RFID로 하나로 연결합니다.</h1><div class="a-scenes"><button class="a-pause" aria-label="배경 모션 일시정지" aria-pressed="false">Ⅱ</button></div><a class="a-scroll-cue" href="#a-visual-links" aria-label="콘텐츠 보기">↓</a><span class="a-motion-hint" hidden></span></section><section id="a-visual-links" class="a-visual-links" aria-label="주요 콘텐츠"><a class="a-visual-card a-case-card" href="#page-cases" aria-label="CASE STUDIES 구축사례"><div class="a-card-art a-case-art" aria-hidden="true"><div class="a-orbit-grid"></div><div class="a-data-globe"></div><i></i><i></i><i></i></div><h2>CASE STUDIES</h2><span class="a-card-arrow">↗</span></a><a class="a-visual-card a-all-card" href="#page-build" aria-label="ALL-IN-ONE 올인원 서비스"><div class="a-card-art a-all-art" aria-hidden="true"><div class="a-chip-object"><div></div></div><i></i><i></i><i></i></div><h2>ALL-IN-ONE</h2><span class="a-card-arrow">↗</span></a><a class="a-visual-card a-clients-card" href="#page-clients" aria-label="CLIENTS 주요고객"><div class="a-client-orbits" aria-hidden="true"><i></i><i></i><i></i><b></b></div><h2>CLIENTS</h2><span class="a-card-arrow">↗</span></a></section>`;
  document.querySelector('.a-scroll-cue').addEventListener('click',e=>{e.preventDefault();document.querySelector('#a-visual-links').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'})});
  const primary=[['재물조사','inventory'],['RFID 구축','build'],['유지관리','maintenance'],['소모품 판매','consumables']];
  const secondary=[['취급장비','products'],['자산관리 프로그램','program'],['재물조사 체험','experience'],['구동영상','video'],['기술인증','cert'],['주요고객','clients'],['구축사례','cases'],['회사소개','about'],['견적문의','quote']];
  document.querySelectorAll('.a-scenes [data-scene]').forEach(b=>b.remove());
  document.querySelector('.a-chip-label').hidden=true;
  
- const space=document.createElement('div');space.className='a-space-stage';space.setAttribute('role','img');space.setAttribute('aria-label','우주 공간에 천천히 떠 있는 둥근 우주인');heroPlaceholder();
- function heroPlaceholder(){document.querySelector('.a-hero').append(space)}
  document.getElementById('site-header').innerHTML=`<div class="a-header"><a class="a-brand" href="#page-index">DBSOFT<em>BANK</em><small>RFID SOLUTIONS</small></a><div class="a-nav-wrap"><nav class="a-desktop-nav" aria-label="주요 업무"><a href="#page-cases">CASE STUDIES</a><a href="#page-build">ALL-IN-ONE</a><a href="#page-clients">CLIENTS</a><a href="#page-quote">CONTACT ↗</a></nav><button class="a-menu-toggle" aria-label="전체 메뉴 열기" aria-controls="a-menu-drawer" aria-expanded="false"><span>메뉴</span></button></div></div><div class="a-drawer-backdrop" hidden></div><nav class="a-drawer" id="a-menu-drawer" aria-label="전체 메뉴" hidden><p class="a-drawer-label">DBSOFTBANK / EXPLORE</p>${primary.map(x=>`<a href="#page-${x[1]}">${x[0]}</a>`).join('')}<div class="a-minor-menu">${secondary.map(x=>`<a href="#page-${x[1]}">${x[0]}</a>`).join('')}</div><div class="a-drawer-contact">070-8803-4080<br>kms@dbsoftbank.com</div></nav>`;
  const toggle=document.querySelector('.a-menu-toggle'),drawer=document.querySelector('.a-drawer'),backdrop=document.querySelector('.a-drawer-backdrop');
  function menu(open){toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'전체 메뉴 닫기':'전체 메뉴 열기');drawer.hidden=backdrop.hidden=!open;document.body.classList.toggle('a-menu-open',open);document.body.style.overflow=open?'hidden':'';if(!open&&drawer.contains(document.activeElement))toggle.focus({preventScroll:true});}
@@ -70,30 +68,35 @@ document.addEventListener('DOMContentLoaded',()=>{
  new IntersectionObserver(es=>visible=es[0].isIntersecting,{threshold:0}).observe(hero);
  function size(){const r=canvas.getBoundingClientRect();W=r.width;H=r.height;const dpr=Math.min(devicePixelRatio||1,1.75);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);signalSize();}
  window.addEventListener('resize',size);document.fonts.ready.then(size);hero.addEventListener('pointermove',e=>{const r=hero.getBoundingClientRect();targetX=(e.clientX-r.left)/r.width-.5;targetY=(e.clientY-r.top)/r.height-.5;});hero.addEventListener('pointerleave',()=>{targetX=targetY=0});
- const particles=Array.from({length:65},(_,i)=>({x:Math.sin(i*473.14)*.5+.5,y:Math.cos(i*147.19)*.5+.5,s:i%9===0?1.1:.5}));
- const land=(window.DB_WORLD_DOTS||[]).map(([lon,lat])=>[lon*Math.PI/180,lat*Math.PI/180]);
- function globe(){
-  const radius=Math.min(W*.32,H*.43),cx=W*.5,cy=H*.48,yaw=t*.055-1.7,tilt=.16;
-  function point(lon,lat){const x=Math.cos(lat)*Math.sin(lon+yaw),z=Math.cos(lat)*Math.cos(lon+yaw),y=-Math.sin(lat);return [cx+radius*x,cy+radius*(y*Math.cos(tilt)-z*Math.sin(tilt)),z*Math.cos(tilt)+y*Math.sin(tilt)]}
-  const halo=ctx.createRadialGradient(cx,cy,radius*.96,cx,cy,radius*1.18);halo.addColorStop(0,'#8fbed222');halo.addColorStop(1,'#08101b00');ctx.fillStyle=halo;ctx.fillRect(cx-radius*1.2,cy-radius*1.2,radius*2.4,radius*2.4);
-  const fill=ctx.createRadialGradient(cx-radius*.35,cy-radius*.4,0,cx,cy,radius);fill.addColorStop(0,'#10212e');fill.addColorStop(.7,'#09121c');fill.addColorStop(1,'#02070e');ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.fillStyle=fill;ctx.fill();
-  function grid(coords){let pen=false;ctx.beginPath();for(const [lon,lat] of coords){const q=point(lon,lat);if(q[2]>0){if(pen)ctx.lineTo(q[0],q[1]);else ctx.moveTo(q[0],q[1]);pen=true}else pen=false}ctx.strokeStyle='#98bbd018';ctx.lineWidth=.7;ctx.stroke()}
-  for(let lat=-60;lat<=60;lat+=30)grid(Array.from({length:181},(_,i)=>[(i*2-180)*Math.PI/180,lat*Math.PI/180]));
-  for(let lon=-180;lon<180;lon+=30)grid(Array.from({length:91},(_,i)=>[lon*Math.PI/180,(i*2-90)*Math.PI/180]));
-  for(const [lon,lat] of land){const q=point(lon,lat);if(q[2]<0)continue;ctx.fillStyle=`rgba(182,208,221,${.25+q[2]*.6})`;ctx.beginPath();ctx.arc(q[0],q[1],Math.max(.65,radius*.004)*(0.6+q[2]*.4),0,Math.PI*2);ctx.fill()}
-  ctx.strokeStyle='#b4d4e13a';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.stroke();
+ // Sculptural antenna: shaded metallic ribbons, projected in real time.
+ function antenna(){
+  const scale=Math.min(W*.42,H*.48),cx=W*.5+px*15,cy=H*.48+py*12;
+  const yaw=.48+Math.sin(t*.13)*.16,pitch=.72+Math.sin(t*.11)*.12;
+  function point(u,r,v){
+   const c=Math.cos(u),s=Math.sin(u),x=Math.sign(c)*Math.pow(Math.abs(c),.65)*r,y=Math.sign(s)*Math.pow(Math.abs(s),.65)*r;
+   const z=v+Math.sin(u*2+t*.16)*.09;
+   const xx=x*Math.cos(yaw)+z*Math.sin(yaw),zz=-x*Math.sin(yaw)+z*Math.cos(yaw);
+   const yy=y*Math.cos(pitch)-zz*Math.sin(pitch),depth=y*Math.sin(pitch)+zz*Math.cos(pitch);
+   const perspective=2.8/(2.8-depth*.3);
+   return [cx+(xx*.91-yy*.42)*scale*perspective,cy+(xx*.35+yy*.95)*scale*perspective,depth];
+  }
+  const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,scale*1.35);glow.addColorStop(0,'#2a404325');glow.addColorStop(1,'#00000000');ctx.fillStyle=glow;ctx.fillRect(0,0,W,H);
+  const faces=[];
+  for(let band=0;band<6;band++)for(let j=0;j<360;j++){
+   const u=j/360*Math.PI*2,un=(j+1)/360*Math.PI*2,r=.45+band*.115;
+   const a=point(u,r,-.025),b=point(un,r,-.025),c=point(un,r+.05,.025),d=point(u,r+.05,.025);
+   const light=Math.pow(Math.max(0,Math.cos(u*2+t*.14+.6)),7),base=28+Math.max(0,Math.sin(u+1.2))*48;
+   faces.push({p:[a,b,c,d],z:(a[2]+c[2])/2,col:`rgb(${base+light*160},${base+light*183},${base+light*186})`,edge:light});
+  }
+  faces.sort((a,b)=>a.z-b.z);
+  for(const f of faces){ctx.beginPath();f.p.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=f.col;ctx.fill();ctx.strokeStyle=f.col;ctx.lineWidth=.65;ctx.stroke();}
+  // A single luminous signal moves around each antenna turn.
+  for(let band=0;band<6;band++){
+   const r=.475+band*.115,start=t*.32-band*.12;
+   for(let j=0;j<24;j++){const u=start+j*.007,a=point(u,r,.029),b=point(u+.009,r,.029);ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.strokeStyle=`rgba(211,255,239,${j/24*.9})`;ctx.lineWidth=1.8;ctx.stroke();}
+  }
  }
- function makeSpace(){
-  space.innerHTML='<img class="a-cinematic-astronaut" src="assets/astronaut-round.png" alt="무중력으로 떠 있는 둥근 우주인" fetchpriority="high" decoding="async">';space.dataset.render='zero-gravity';
-  const character=space.querySelector('img');
-  return function(time){const r=hero.getBoundingClientRect(),sw=space.offsetWidth,sh=space.offsetHeight;
-   const mobile=r.width<760,cx=r.width*(mobile?.58:.68),cy=r.height*(mobile?.49:.48);
-   const x=cx-sw/2+Math.sin(time*.17)*r.width*.035,y=cy-sh/2+Math.sin(time*.23+.7)*r.height*.035;
-   space.style.transform=`translate3d(${x}px,${y}px,0)`;character.style.transform=`rotate(${-10+Math.sin(time*.14)*9}deg) scale(${1+Math.sin(time*.16)*.018})`;
-  };
- }
- const renderSpace=makeSpace();
- function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden)return;if(!paused)t+=dt;px+=(targetX-px)*.04;py+=(targetY-py)*.04;const light=signal.querySelector('.a-wire-light'),bloom=signal.querySelector('.a-wire-bloom'),secondary=signal.querySelector('.a-wire-second-light');const dash=`100 ${signalLength+240}`;light.style.strokeDasharray=bloom.style.strokeDasharray=dash;light.style.strokeDashoffset=bloom.style.strokeDashoffset=String(-t*64);secondary.style.strokeDasharray=`75 ${signalSecondLength+260}`;secondary.style.strokeDashoffset=String(-t*48-400);if(!visible||home.hidden||!W)return;ctx.clearRect(0,0,W,H);for(const p of particles){ctx.fillStyle=`rgba(195,210,240,${.38+Math.sin(t*1.4+p.x*10)*.23})`;ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.s,0,Math.PI*2);ctx.fill();}globe();if(renderSpace)renderSpace(t);}
+ function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;if(document.hidden)return;if(!paused)t+=dt;px+=(targetX-px)*.04;py+=(targetY-py)*.04;const light=signal.querySelector('.a-wire-light'),bloom=signal.querySelector('.a-wire-bloom'),secondary=signal.querySelector('.a-wire-second-light');const dash=`100 ${signalLength+240}`;light.style.strokeDasharray=bloom.style.strokeDasharray=dash;light.style.strokeDashoffset=bloom.style.strokeDashoffset=String(-t*64);secondary.style.strokeDasharray=`75 ${signalSecondLength+260}`;secondary.style.strokeDashoffset=String(-t*48-400);if(!visible||home.hidden||!W)return;ctx.clearRect(0,0,W,H);antenna();}
  function scroll(){document.body.classList.toggle('a-scrolled',scrollY>30)}window.addEventListener('scroll',scroll,{passive:true});scroll();
  window.addEventListener('hashchange',()=>{menu(false);requestAnimationFrame(size)});size();requestAnimationFrame(frame);requestAnimationFrame(()=>{window.dispatchEvent(new Event('hashchange'));size()});
 });
