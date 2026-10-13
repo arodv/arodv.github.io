@@ -1,0 +1,60 @@
+/* A: quiet orbital motion and a consistent dark editorial system. */
+body.design-a{--dark:#edf1f5;--text:#d1d8df;--text2:#99a5b1;--gray1:#0b0e13;--gray2:#242b34;--orange:#b7d1df;--surface:#090c11;color:var(--text);font-family:Arial,'Malgun Gothic',sans-serif!important;line-height:1.7}
+body.design-a button,body.design-a input,body.design-a select,body.design-a textarea{font-family:inherit}
+body.design-a h1,body.design-a h2,body.design-a h3,body.design-a h4{font-family:inherit!important;letter-spacing:-.035em;line-height:1.3}
+body.design-a .offline-page:not(#page-index) :is(section,main,.page-head){background:transparent!important}
+body.design-a .offline-page:not(#page-index) :is(h1,h2,h3,h4){color:#ecf0f4!important}
+body.design-a .offline-page:not(#page-index) :is(p,li){color:#a5afb9}
+body.design-a .page-head{padding:76px 0 56px!important;border-bottom:1px solid #ffffff12}
+body.design-a .page-head h1{font-size:clamp(34px,4.6vw,60px)!important;font-weight:600!important;margin:16px 0!important}
+body.design-a .page-head p{font-size:15px!important;line-height:1.85}
+body.design-a .crumb{font-size:11px;color:#6e7b87!important}
+body.design-a .wrap{max-width:1240px;padding-inline:40px}
+body.design-a .offline-page:not(#page-index)>section{padding-block:64px}
+body.design-a .offline-page:not(#page-index) :is(.card,.post,.form-box,.form-card,.panel,.cert-card,.v6-cert-card,.box,.eq){background:#0a0e14!important;border-color:#29303a!important;color:#d6dee5}
+body.design-a .offline-page :is(input,textarea,select){background:#0e131b!important;color:#e8edf2!important;border-color:#34404e!important;color-scheme:dark}
+body.design-a :is(.btn,.reader-toggle,.reader-tools button,.a-detail-links a){border-radius:5px!important;font-weight:500!important;letter-spacing:0;transition:background .25s,color .25s,border-color .25s}
+body.design-a :is(.btn-o,.btn-d,.btn-blog){background:#d1dfe7!important;color:#0b131b!important;border:1px solid #d1dfe7!important}
+body.design-a :is(.btn-o,.btn-d,.btn-blog):hover{background:#fff!important;color:#05080d!important}
+body.design-a .btn-w{background:transparent!important;border:1px solid #566371!important;color:#d4dee6!important}
+body.design-a .btn-blog .n{background:#0a121c!important;color:#dce6ee!important}
+body.design-a .cta-band{background:#0b111a!important;border-top:1px solid #26303b}
+body.design-a .cta-band p{color:#9daab8!important}
+body.design-a :is(.sec-title,.blog-head) h2{font-size:30px!important;font-weight:600!important}
+body.design-a :is(.a-detail-copy,.a-detail-content){color:#dce3e9}
+body.design-a .a-detail-copy h1{font-weight:600;font-size:clamp(34px,4.5vw,60px)}
+body.design-a .a-detail-content h2{font-weight:600;font-size:30px;line-height:1.4}
+body.design-a .a-detail-grid article,body.design-a .a-process>div{border-color:#26313c;background:transparent}
+body.design-a .a-detail-links a{background:#0b131e;color:#d5e1eb;border-color:#364352}
+body.design-a .a-relocated :is(.allin,.allin h2,.allin .desc,.allin .chk li){background:transparent!important;color:#cad5df!important}
+body.design-a .a-relocated .allin-grid img{border-radius:5px!important}
+body.design-a .tabs{background:#0b1018!important;border-color:#293440!important}body.design-a .tabs a{color:#9fadb9!important}body.design-a .tabs a.on{color:#f2f6f9!important;border-color:#b6cad8!important}
+body.design-a :is(.board-tbl th,.board-tbl td){background:#0b1018!important;border-color:#2a3440!important;color:#b6c3ce!important}
+body.design-a :is(.reader-pane,.photo-view,.photo-counter){background:#101720!important;color:#d1dde7!important}
+body.design-a .eq-grid>.eq>img{mix-blend-mode:normal!important;background:#0d141d!important;border-radius:5px}
+body.design-a :is(.modal,.modal-content,.estimate-dialog,.estimate-inner){background:#101720!important;color:#d4dfe8!important}
+body.design-a .a-header{background:#030609a8!important}
+.a-signal-backdrop{opacity:.45!important;mix-blend-mode:normal!important}.a-wire-base{stroke:#9daebb20!important;stroke-width:.8!important}.a-wire-light{stroke:#dbe8ee!important;stroke-width:1.2!important}.a-wire-bloom{stroke-width:3!important;opacity:.25!important}.a-wire-second-light{stroke:#b2c7d9!important;stroke-width:1!important}
+.a-hero:before{background:radial-gradient(ellipse at 58% 42%,#1c34422b,transparent 66%)!important;animation:none!important}
+.a-space-stage{width:clamp(250px,31vw,480px)!important;height:clamp(250px,31vw,480px)!important}.a-space-stage img.a-cinematic-astronaut{filter:drop-shadow(0 20px 30px #0005)!important}
+.a-client-orbits{position:absolute;width:360px;height:300px;right:12%;top:25px;perspective:700px}.a-client-orbits i{position:absolute;inset:20px;border:1px solid #b6ccdc55;border-radius:50%;transform:rotateX(65deg) rotateZ(-30deg)}.a-client-orbits i:nth-child(2){transform:rotateY(65deg) rotateZ(30deg)}.a-client-orbits i:nth-child(3){transform:rotateX(30deg) rotateY(40deg)}.a-client-orbits b{position:absolute;width:20px;height:20px;left:48%;top:47%;border-radius:50%;background:#d5e1e9;box-shadow:0 0 45px #abcfe64d}
+.a-clients-card{background:linear-gradient(100deg,#070a0dde,#10182088)!important}
+.a-visual-card h2{font-family:Arial,'Malgun Gothic',sans-serif!important;font-weight:600!important;font-size:clamp(32px,4.5vw,68px)!important;letter-spacing:-.055em!important}
+body.design-a #page-cases .blog-grid{gap:28px;grid-template-columns:repeat(3,minmax(0,1fr))}
+body.design-a #page-cases .post{border:1px solid #28333e!important;border-radius:5px!important;text-decoration:none;box-shadow:none!important;transition:transform .35s,border-color .35s}
+body.design-a #page-cases .post:hover{transform:translateY(-5px);border-color:#7893a8!important}
+body.design-a #page-cases .post img{height:auto!important;aspect-ratio:1.42;object-fit:cover;object-position:center;background:#101821}
+body.design-a #page-cases .post .body{position:relative;padding:26px;gap:10px}
+body.design-a #page-cases .post h4{font-size:18px;font-weight:500;line-height:1.6;margin:0!important;min-height:86px}
+body.design-a #page-cases .post .cat{font-size:10px;letter-spacing:.14em;color:#8ba4b8}
+body.design-a #page-cases .post .date{font-size:12px;color:#6f8395;margin-top:6px}.a-post-arrow{position:absolute;bottom:25px;right:24px;color:#c4d5e2;font-size:22px}
+body.design-a #page-clients .client-card{background:#080b10!important;border:1px solid #202a35!important;border-radius:5px!important;padding:25px 20px!important;min-height:190px}
+body.design-a #page-clients .client-card .name{color:#c5d0da!important;font-size:14px!important;font-weight:500!important}
+body.design-a #page-clients .client-logo{background:#080b10!important;border-radius:0!important}
+body.design-a #page-clients .client-logo img{filter:grayscale(1) invert(1);mix-blend-mode:screen;opacity:.85}
+body.design-a #page-clients .a-original-dark-logo img{filter:grayscale(1);mix-blend-mode:screen}
+body.design-a #page-clients .client-grid{gap:14px!important;background:transparent!important}
+body.design-a #page-clients .client-group h2{font-size:26px!important;font-weight:500!important;letter-spacing:-.035em}
+body.design-a #page-clients .client-group h2 small{color:#596d80!important;letter-spacing:.1em;font-size:10px}
+body.design-a #page-clients .client-jump a{background:#0c1219!important;border-color:#2b3946!important;color:#b5c6d5!important;border-radius:4px!important}
+@media(max-width:760px){body.design-a .wrap{padding-inline:24px}body.design-a .page-head{padding:40px 0 30px!important}body.design-a .offline-page:not(#page-index)>section{padding-block:40px}body.design-a .page-head p{font-size:13px!important}.a-space-stage{width:clamp(215px,60vw,340px)!important;height:clamp(215px,60vw,340px)!important}.a-client-orbits{width:260px;height:230px;right:7%;top:12px}.a-visual-card h2{font-size:44px!important}body.design-a #page-cases .blog-grid{grid-template-columns:1fr;gap:22px}body.design-a #page-cases .post h4{min-height:0}body.design-a .blog-head{gap:20px;align-items:flex-start;flex-direction:column}body.design-a #page-clients .client-card{min-height:150px;padding:20px 12px!important}body.design-a #page-clients .client-card .name{font-size:12px!important}body.design-a #page-clients .client-group h2{font-size:21px!important}}
