@@ -29,11 +29,23 @@ document.addEventListener('DOMContentLoaded',()=>{
  ].map(([n,t,d])=>`<article><span>${n}</span><h3>${t}</h3><p>${d}</p></article>`).join('')}</div><p class="r-note">세부 기능과 연동 범위는 기관의 운영 환경 및 협의한 개발 범위에 따라 구성합니다.</p></section>`;
  $('#page-program .page-head p').textContent='자산 등록·변경·조회부터 RFID 태그 발행, 재물조사 결과 관리까지 한 시스템에서 연결합니다.';
  $('#page-program .feat').insertAdjacentHTML('afterbegin','<div><h4>RFID 태그 발행</h4><p>프로그램에서 물품을 선택해 태그를 발행하고, 신규물품 및 훼손·누락 태그의 재발행 업무를 처리합니다.</p></div>');
- const cases=window.DB_BUSINESS_DATA.cases;
- const glyph=(i)=>`<svg viewBox="0 0 260 130" fill="none" aria-hidden="true"><path d="M20 100H240M45 100V${30+i*3}H110V100M120 100V${60-i*3}H215V100"/><path d="M60 48H95M60 64H95M60 80H95M135 76H195M135 90H195"/><circle cx="210" cy="30" r="17"/><path d="M200 30h20m-10-10v20"/><path class="r-signal" d="M28 116H232"/></svg>`;
- const list=[cases[0],{category:'주요고객',title:'한국노인인력개발원',url:'#page-clients',date:'주요고객 소개'},...cases.slice(1)];
- const tags=[['기업 자산','RFID'],['공공기관','고객 소개'],['기관 이전','관리 체계'],['지방자치단체','새올 연동'],['교육행정','전자태그'],['금융기관','RFID 도입']];
- $('#page-cases .sector-grid').outerHTML=`<div class="r-project-grid">${list.map((c,i)=>`<a class="r-project" href="${c.url}" ${c.url.startsWith('http')?'target="_blank" rel="noopener"':''}><div class="r-project-top"><span>${c.category}</span><b>${String(i+1).padStart(2,'0')}</b></div>${glyph(i)}<h2>${c.title}</h2><div class="r-tags">${tags[i].map(t=>`<span>${t}</span>`).join('')}</div><footer><span>${c.date}</span><strong>${i===1?'주요고객 보기':'공식 기록 보기'} ↗</strong></footer></a>`).join('')}</div>`;
+ const sectors=[
+ ['기업','ENTERPRISE','사무·연구·생산 공간의 자산관리','부서와 위치별 자산 등록, 이동 이력과 태그 발행, 정기재물조사 업무를 연결합니다.','기업 빌딩을 표현한 대표 그래픽'],
+ ['공공기관','PUBLIC INSTITUTIONS','기관 운영에 맞춘 물품관리','기관의 물품대장과 관리 기준을 바탕으로 등록·조사·변경 업무의 흐름을 구성합니다.','공공시설을 표현한 대표 그래픽'],
+ ['정부기관','GOVERNMENT','부처·청사 단위의 관리 체계','청사와 부서별 관리 구역을 구분하고, 물품 현황 확인과 조사 결과 정리를 지원합니다.','정부청사를 표현한 대표 그래픽'],
+ ['행안부','LOCAL ADMINISTRATION','지자체 물품관리·새올 연동','시청·군청 등 지방자치단체의 물품관리 환경과 새올 시스템 연동 업무를 안내합니다.','지방행정 청사를 표현한 대표 그래픽','https://blog.naver.com/dbsoftbank/224225828521','지자체 현장 기록'],
+ ['교육부','EDUCATION','교육기관 전자태그·재물조사','교육지원청과 학교의 물품대장을 정리하고 전자태그 기반 현장확인과 조사 결과 관리를 연결합니다.','교육시설을 표현한 대표 그래픽','https://blog.naver.com/dbsoftbank/224267314105','교육지원청 현장 기록'],
+ ['도서관','LIBRARIES','도서관 시설·비품의 자산관리','서가·집기·전산장비 등 시설 비품을 대상으로 위치별 대장 정리와 재물조사 업무를 구성합니다.','서가와 책을 표현한 대표 그래픽']
+ ];
+ $('#page-cases .business-heading p').textContent='6개 적용 분야를 소개합니다. 공개된 현장 기록은 지자체·교육 분야에서 확인하실 수 있습니다.';
+ $('#page-cases .sector-grid').outerHTML=`<div class="r-project-grid">${sectors.map(([t,en,sub,desc,alt,url,label],i)=>`<article class="r-project r-sector"><div class="r-sector-image"><img src="assets/sector-${i}.svg" alt="${alt}" loading="lazy"><span>${en}</span></div><div class="r-sector-copy"><div class="r-project-top"><span>${url?'관련 현장 기록':'적용 분야'}</span><b>0${i+1}</b></div><h2>${t}</h2><h3>${sub}</h3><p>${desc}</p><footer>${url?`<a href="${url}" target="_blank" rel="noopener">${label} ↗</a>`:'<a href="#page-quote">적용 상담 ↗</a>'}</footer></div></article>`).join('')}</div><p class="r-note">이미지는 분야를 표현한 그래픽이며 특정 기관의 로고나 실제 구축 현장이 아닙니다. 행안부·교육부 분류의 기록은 지자체·교육기관 사례로, 해당 부처 본부의 구축 실적을 의미하지 않습니다.</p>`;
+ const caseTrack=$('.b-case-track');
+ caseTrack.innerHTML=sectors.map(([t,en,sub,desc,alt],i)=>`<a class="b-case" href="#page-cases"><div><img src="assets/sector-${i}.svg" alt="${alt}" loading="lazy"></div><small>${en}</small><h3>${t} ↗</h3><p class="r-sector-caption">${sub}</p></a>`).join('');
+ const caseSection=caseTrack.closest('section');
+ caseSection.querySelector('.b-eyebrow').textContent='RFID APPLICATIONS';
+ caseSection.querySelector('h2').innerHTML='다양한 공간에 맞춘<br>RFID 물품관리.';
+ caseSection.querySelector('.b-image-note')?.remove();
+ caseSection.insertAdjacentHTML('beforeend','<p class="b-image-note">분야별 대표 그래픽입니다. 공개된 현장 기록은 구축사례에서 확인하실 수 있습니다.</p>');
  $$('#page-cases .b-image-note').forEach(e=>e.remove());
  const supplies=[
  ['전자태그','물품을 식별하는 기본 매체','RFID 칩과 안테나를 통해 물품을 식별합니다. 물품 재질, 부착 위치와 장비 호환성을 확인해 선정합니다.','<rect x="48" y="42" width="164" height="76" rx="8"/><path d="M66 56h128v48H66zM78 66h104v28H78z"/><rect x="121" y="70" width="18" height="18"/>'],
